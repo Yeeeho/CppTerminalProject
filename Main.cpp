@@ -4,18 +4,29 @@
 #include <chrono>
 
 #include "Scenes.h"
+#include "Entities.h"
+
+Player* player = new Player();
+//씨발 생성자 주입 씨발 ㅈ같다 니들은 씨쁠쁠 쓰지말고 유니티 해라
+Scenario scene = Scenario(player);
+
+void DebugLoop() {
+    scene.DebugScene();
+}
 
 
 int main() {
-    Scenario scene;
-    scene.Init();
+    DebugLoop();
+
     while (true) {
+        scene.Init();
         if (scene.curScene == "intro1") {
-            std::cout << "intro1 을 실행합니다.";
+            // std::cout << "intro1 을 실행합니다.";
+            scene.Intro1();
             break;
         }
         else if (scene.curScene == "cut_comm_ending") {
-            std::cout << "통신종료 엔딩을 실행합니다.";
+            // std::cout << "통신종료 엔딩을 실행합니다.";
             scene.CutCommEnding();
             break;
         }
@@ -23,3 +34,8 @@ int main() {
     }
     return 0;
 }
+
+
+
+
+

@@ -34,7 +34,35 @@ void Utilities::PrintLine(std::string string, bool isNewLine, int lineInterval, 
 void Utilities::NewLine5() {
     std::cout << "\n\n\n\n\n";
 }
-void Utilities::LoadingLine(std::string message ,int iteration) {
+void Utilities::NewLine(int lines)
+{
+    for (int i = 0; i < lines; i++) {
+        std::cout << "\n";
+    }
+}
+
+void Utilities::TerminalColor(std::string color) 
+{
+    if (color == "red") {
+        std::cout << "\033[31m";
+    }
+    else if (color == "blue") {
+        std::cout << "\033[34m";
+    }
+    else if (color == "yellow") {
+        std::cout << "\033[33m";
+    }
+    else if (color == "cyan") {
+        std::cout << "\033[36m";
+    }
+}
+void Utilities::TerminalColor()
+{
+    std::cout << "\033[0m";
+}
+
+void Utilities::LoadingLine(std::string message, int iteration)
+{
     PrintLine(message, false);
     for (int i = 0; i < iteration; i++) {
         std::cout << "\r\033[K";

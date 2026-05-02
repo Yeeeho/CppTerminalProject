@@ -14,6 +14,11 @@ class Utilities {
     void LoadingLine(std::string message ,int iteration);
 
     void NewLine5();
+    void NewLine(int lines);
+
+    void TerminalColor(std::string color);
+    void TerminalColor();
+
     void DotEffect();
 
 };
