@@ -7,7 +7,7 @@
 #include "Entities.h"
 
 Player* player = new Player();
-//씨발 생성자 주입 씨발 ㅈ같다 니들은 씨쁠쁠 쓰지말고 유니티 해라
+//씨발 생성자 주입
 Scenario scene = Scenario(player);
 
 void DebugLoop() {
@@ -16,6 +16,7 @@ void DebugLoop() {
 
 
 int main() {
+    system("");
     DebugLoop();
 
     while (true) {

@@ -21,8 +21,9 @@ class Scenario {
     void YesOrNo(std::string& input);
 
     void Init();
-    void CombatScene(Entities* enemy);
     void ReturnMain();
     void CutCommEnding();
+    void DeathEnding();
     void Intro1();
+    void Stage0();
 };

@@ -5,6 +5,7 @@
 #include "Scenes.h"
 #include "Entities.h"
 #include "Combat.h"
+#include "Map.h"
 
 Scenario::Scenario()
 {
@@ -17,8 +18,9 @@ Scenario::Scenario(Player *p)
 
 void Scenario::DebugScene()
 {
-    Slave* slv = new Slave();
-    CombatScene(slv);
+    Combat combat = Combat(player);
+    Subterranean* sub = new Subterranean();
+    combat.Loop(sub);
 }
 
 
@@ -143,15 +145,6 @@ void Scenario::Init() {
     }
 }
 
-void Scenario::CombatScene(Entities* enemy)
-{
-    Combat combat = Combat(player);
-
-    util.TerminalColor();
-    util.PrintLine("전투를 시작합니다.");
-    combat.Loop(enemy);
-}
-
 void Scenario::ReturnMain()
 {
     util.PrintLine("메인 화면으로 돌아가시겠습니까?");
@@ -189,6 +182,14 @@ void Scenario::CutCommEnding()
     util.LoadingLine("", 2);
 
     util.PrintLine("아참, 건너뛰기 키워드는 \'그래\' 입니다.");
+}
+
+void Scenario::DeathEnding()
+{
+    util.PrintLine("상대 터미널이 통신을 중지했습니다.", 2);
+    util.PrintLine("\033[31m엔딩 2: 객사", false, 50, 100);
+    util.NewLine(3);
+    return;
 }
 
 void Scenario::Intro1()
@@ -241,7 +242,13 @@ void Scenario::Intro1()
     util.PrintLine("뭐라도 터미널로 명령을 내려. 아마 시스템이 선택지를 줄 거야.");
     util.TerminalColor();
 
+    Combat combat = Combat(player);
     Slave* slv = new Slave();
-    CombatScene(slv);
+    combat.Loop(slv);
 }
 
+void Scenario::Stage0()
+{
+    Map map0 = Map(player, 2);
+    map0.Progress();
+}

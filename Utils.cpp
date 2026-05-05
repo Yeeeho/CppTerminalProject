@@ -4,6 +4,7 @@
 #include <chrono>
 
 #include "Utils.h"
+#include "Entities.h"
 
 void Utilities::Wait05() {
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
@@ -22,12 +23,13 @@ std::string Utilities::DefaultInput() {
     return string;
 }
 
-void Utilities::PrintLine(std::string string, bool isNewLine, int lineInterval, int wordInterval) {
+void Utilities::PrintLine(std::string string, int newLines, int lineInterval, int wordInterval) {
     for (int i = 0; i < string.length(); i++) {
         std::cout << string[i] << std::flush;
         Wait(wordInterval);
     }
-    if (isNewLine) std::cout << "\n";
+    
+    NewLine(newLines);
 
     Wait(lineInterval);
 }
@@ -41,24 +43,52 @@ void Utilities::NewLine(int lines)
     }
 }
 
-void Utilities::TerminalColor(std::string color) 
+std::string Utilities::TerminalColor(std::string color) 
 {
+    std::string ansiColor;
+
     if (color == "red") {
-        std::cout << "\033[31m";
+        ansiColor = "\033[31m";
     }
     else if (color == "blue") {
-        std::cout << "\033[34m";
+        ansiColor = "\033[34m";
+    }
+    else if (color == "green") {
+        ansiColor = "\033[32m";
     }
     else if (color == "yellow") {
-        std::cout << "\033[33m";
+        ansiColor = "\033[33m";
     }
     else if (color == "cyan") {
-        std::cout << "\033[36m";
+        ansiColor = "\033[36m";
     }
+    std::cout << ansiColor;
+    return ansiColor;
 }
-void Utilities::TerminalColor()
+
+std::string Utilities::TerminalColor()
 {
-    std::cout << "\033[0m";
+    std::string ansiColor;
+    ansiColor = "\033[0m";
+
+    std::cout << ansiColor;
+    return ansiColor;
+}
+
+std::string Utilities::WrapColor(std::string line, std::string color)
+{
+    std::string ansiColor = TerminalColor(color);
+    std::string defaultColor = TerminalColor();
+
+    line = ansiColor + line + defaultColor;
+    return line;
+}
+
+std::string Utilities::EntityColorName(Entities *entity)
+{
+    std::string name = entity->name;
+    name = WrapColor(name, entity->nameColor);
+    return name;
 }
 
 void Utilities::LoadingLine(std::string message, int iteration)

@@ -6,6 +6,9 @@ class Combat {
     public:
     Combat() = default;
     Combat(Player* p);
-    void SpeedSort(Entities* entities[]);
+
     void Loop(Entities* enemy);
+
+    void SpeedSort(Entities* entities[]);
+    void BattleUI(Entities* entities[]);
 };

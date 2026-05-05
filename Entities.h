@@ -1,33 +1,69 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
+#include "Effects.h"
+
+class Effects;
 
 class Entities {
-    public:
+    private:
 
+    
+    public:
+    
     std::string name;
     std::string desc;
+    std::string nameColor = "red";
+
+    std::vector<Effects*> effects;
 
     int hp;
     int atk;
     int spd;
+    int exp;
 
-    virtual void Attack(Entities* target);
+    bool isDead = false;
+    bool isPlayer = false;
+
+    Entities* target;
+
+    virtual void Attack();
+    virtual void TakeTurn();
+    virtual void Dead();
+
+    void TakeDamage(int damage);
 };
 
 class Player : public Entities {
     private:
-    void Attack(Entities* target) override;
-
+    
     public:
     Player();
     ~Player();
+
+    void Attack() override;
+    void TakeTurn() override;
+    void ShowMenu();
 };
 
 class Slave : public Entities {
-    public:
+    private:
+    void TakeTurn() override;
+    void Attack() override;
 
+    public:
     Slave();
     ~Slave();
+};
+
+class Subterranean : public Entities {
+    private:
+    void TakeTurn() override;
+    void Attack() override;
+
+    public:
+    Subterranean();
+    ~Subterranean();
 };
