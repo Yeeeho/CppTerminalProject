@@ -25,6 +25,8 @@ class Utilities {
 
     void DotEffect();
 
+    void IntClamp(int& num, int min, int max);
+    
 };
 
 #endif

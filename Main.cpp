@@ -9,13 +9,16 @@
 Player* player = new Player();
 //씨발 생성자 주입
 Scenario scene = Scenario(player);
+Enemies en;
 
 void DebugLoop() {
     scene.DebugScene();
 }
 
+void Init();
 
 int main() {
+    Init();
     system("");
     DebugLoop();
 
@@ -36,6 +39,9 @@ int main() {
     return 0;
 }
 
+void Init() {
+    en.InitEnemyPool();
+}
 
 
 

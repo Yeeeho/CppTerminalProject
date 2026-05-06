@@ -6,8 +6,6 @@
 #include "Combat.h"
 #include "Utils.h"
 
-Utilities util;
-
 void Entities::Attack() {
     std::cout << "이 문장이 보이면 오버라이드 안된거임";
 }
@@ -18,6 +16,8 @@ void Entities::TakeTurn() {
 
 void Entities::Dead()
 {
+    Utilities util;
+
     this->isDead = true;
 
     std::string line = this->name + "(이)가 쓰러집니다!";
@@ -25,31 +25,25 @@ void Entities::Dead()
     util.PrintLine(line, 2);
 }
 
-void Entities::TakeDamage(int damage)
+Entities Entities::Clone()
 {
-    int prevHp = this->hp;
-    this->hp = this->hp - damage;
-
-    std::string thp = std::to_string(this->hp);
-    std::string pthp = std::to_string(prevHp);
-    std::string name = util.WrapColor(this->name, this->nameColor);
-    std::string line = name + "의 체력 변화: " + pthp + " -> " + thp;
-    util.PrintLine(line, 4);
-
-    if (this->hp <= 0) {
-        this->Dead();
-    }
+    //this = Entities* entitiy = new Entitiies();
+    Entities *ent = new Entities();
+    return *ent;
 }
 
 void Player::Attack()
 {
+    Utilities util;
+    Combat combat;
+
     Entities* target = this->target;
 
     std::string playerName = util.WrapColor(this->name, "green");
     std::string line = playerName + " 이 공격했다.";
     util.PrintLine(line, 2);
 
-    target->TakeDamage(this->atk);
+    combat.TakeDamage(this->target, this->atk);
 }
 
 
@@ -74,12 +68,13 @@ void Player::TakeTurn()
 void Player::ShowMenu()
 {
     Utilities util;
+    Combat combat;
 
     util.TerminalColor("yellow");
     util.PrintLine("행동을 선택하십시오.");
     util.TerminalColor();
     util.PrintLine("[1] 공격", true, 200, 0);
-    util.PrintLine("[2] 방어 및 관찰", true, 200, 0);
+    util.PrintLine("[2] 방어", true, 200, 0);
     util.PrintLine("[3] 기술 사용", true, 200, 0);
     util.PrintLine("[4] 아이템 사용", true, 200, 0);
     util.NewLine(3);
@@ -97,11 +92,9 @@ void Player::ShowMenu()
 
         //관찰
         else if (input == "2") {
-            util.PrintLine("관찰을 시작합니다...");
-            util.NewLine(1);
+            util.PrintLine("당신은 방어자세를 취합니다");
             Effects* defence = new Defence(this);
             this->effects.push_back(defence);
-            util.PrintLine(this->target->desc, 2);
             break;
         }
 
@@ -123,6 +116,14 @@ Player::~Player() {
     spd = 10;
 }
 
+void Enemies::InitEnemyPool()
+{
+    Enemies enem;
+    Slave* slave = new Slave();
+    Subterranean* sub = new Subterranean();
+    enem.ENEMY_POOL.push_back(slave);
+    enem.ENEMY_POOL.push_back(sub);
+}
 
 Slave::Slave()
 {
@@ -141,10 +142,13 @@ void Slave::TakeTurn()
 
 void Slave::Attack()
 {
+    Utilities util;
+    Combat combat;
+
     std::string enemyName = util.WrapColor(this->name, "red");
     util.PrintLine(enemyName + "가 손을 휘적거립니다!", 2);
 
-    this->target->TakeDamage(this->atk);
+    combat.TakeDamage(this->target, this->atk);
 }
 
 Slave::~Slave()
@@ -159,10 +163,13 @@ void Subterranean::TakeTurn()
 
 void Subterranean::Attack()
 {
+    Utilities util;
+    Combat combat;
+
     std::string enemyName = util.WrapColor(this->name, "red");
     util.PrintLine(enemyName + "이 긴 손톱을 휘두릅니다!", 2);
 
-    this->target->TakeDamage(this->atk);
+    combat.TakeDamage(this->target, this->atk);
 }
 
 Subterranean::Subterranean()
@@ -178,3 +185,5 @@ Subterranean::Subterranean()
 Subterranean::~Subterranean()
 {
 }
+
+

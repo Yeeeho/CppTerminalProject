@@ -10,7 +10,6 @@ class Effects;
 class Entities {
     private:
 
-    
     public:
     
     std::string name;
@@ -32,8 +31,7 @@ class Entities {
     virtual void Attack();
     virtual void TakeTurn();
     virtual void Dead();
-
-    void TakeDamage(int damage);
+    Entities Clone();
 };
 
 class Player : public Entities {
@@ -48,17 +46,28 @@ class Player : public Entities {
     void ShowMenu();
 };
 
-class Slave : public Entities {
+class Enemies : public Entities {
+    public:
+
+    std::vector<Enemies*> ENEMY_POOL;
+
+    Enemies() = default;
+    ~Enemies() = default;
+
+    void InitEnemyPool();
+};
+
+class Slave : public Enemies {
     private:
     void TakeTurn() override;
     void Attack() override;
-
+    
     public:
     Slave();
     ~Slave();
 };
 
-class Subterranean : public Entities {
+class Subterranean : public Enemies {
     private:
     void TakeTurn() override;
     void Attack() override;

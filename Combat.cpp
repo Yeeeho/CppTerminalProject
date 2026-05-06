@@ -1,8 +1,8 @@
+#include <vector>
+
 #include "Combat.h"
 #include "Scenes.h"
 #include "Utils.h"
-
-
 
 Combat::Combat(Player *p)
 {
@@ -15,6 +15,33 @@ void Combat::SpeedSort(Entities* entities[])
         Entities* temp = entities[0];
         entities[0] = entities[1];
         entities[1] = temp;
+    }
+}
+
+void Combat::TakeDamage(Entities *ent, int damage)
+{
+    Utilities util;
+    int buffDef = 0;
+
+    for (auto effect : ent->effects) {
+        if (effect->name == "방어") {
+            buffDef = effect->buffDef;
+        }
+    }
+    damage = damage - buffDef;
+    util.IntClamp(damage, 0, 9999999);
+
+    int prevHp = ent->hp;
+    ent->hp = ent->hp - damage;
+
+    std::string thp = std::to_string(ent->hp);
+    std::string pthp = std::to_string(prevHp);
+    std::string name = util.WrapColor(ent->name, ent->nameColor);
+    std::string line = name + "의 체력 변화: " + pthp + " -> " + thp;
+    util.PrintLine(line, 4);
+
+    if (ent->hp <= 0) {
+        ent->Dead();
     }
 }
 
@@ -77,13 +104,28 @@ void Combat::Loop(Entities* enemy)
     int i = 0;
     while (true) {
         SpeedSort(entityPool);
+        util.LoadingLine("",1);
+        std::cout << "\033[2J\033[H";
         BattleUI(entityPool);
 
-        std::string name = util.WrapColor(entityPool[i%2]->name, entityPool[i%2]->nameColor);
+        Entities* curEntity;
+        curEntity = entityPool[i%2];
+        std::string name = util.WrapColor(curEntity->name, curEntity->nameColor);
         line = name + "이(가) 행동할 차례입니다.";
         util.PrintLine(line, 2);
 
-        entityPool[i%2]->TakeTurn();
+        curEntity->TakeTurn();
+
+        if (!curEntity->effects.empty()) {
+            for (auto effect : curEntity->effects) {
+                if (effect->lastTurn > 0) {
+                    effect->lastTurn -= 1;
+                }
+                if (effect->lastTurn <= 0) {
+                    delete effect;
+                }
+            }
+        }
 
         i += 1;
 

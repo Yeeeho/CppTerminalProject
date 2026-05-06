@@ -1,5 +1,7 @@
 #include "Entities.h"
 
+class Entities;
+
 class Combat {
     private:
     Player* player;
@@ -7,8 +9,8 @@ class Combat {
     Combat() = default;
     Combat(Player* p);
 
-    void Loop(Entities* enemy);
-
     void SpeedSort(Entities* entities[]);
+    void TakeDamage(Entities* entity, int damage);
     void BattleUI(Entities* entities[]);
+    void Loop(Entities* enemy);
 };

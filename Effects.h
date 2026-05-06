@@ -11,15 +11,14 @@ class Effects {
 
     public:
     std::string name;
-    
-    int lastTurn;
+    int buffDef;
 
+    int lastTurn; //1로 설정하면 생성되자마자 바로 없어짐
 };
 
 class Defence : public Effects {
 
     public:
-    int buffDef;
     Defence(Entities *ent);
     ~Defence() = default;
 };

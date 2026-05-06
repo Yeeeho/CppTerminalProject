@@ -3,6 +3,6 @@
 Defence::Defence(Entities *ent)
 {
     name = "방어";
-    lastTurn = 1;
+    lastTurn = 2;
     buffDef = ent->hp/10;
 }

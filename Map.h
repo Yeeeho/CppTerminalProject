@@ -10,8 +10,11 @@ class Room {
     public:
 
     bool isEnemy = false;
-    bool isEvent = false;
+    int enemyIdx = -1;
     Entities* enemy;
+
+    bool isEvent = false;
+    int eventIdx = -1;
 
     Room();
     ~Room();
@@ -22,12 +25,14 @@ class Map {
     Player* player;
     public:
     
-    std::vector<Room> rooms;
+    std::vector<Room*> rooms;
     
     Map();
+    Map(int rooms);
     Map(Player* player ,int rooms);
     ~Map();
     
+    void RandomRooms();
     void Progress();
 };
 

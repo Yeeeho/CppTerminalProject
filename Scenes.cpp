@@ -18,9 +18,17 @@ Scenario::Scenario(Player *p)
 
 void Scenario::DebugScene()
 {
+    std::cout << "debugging scene\n";
+
+    //전투 테스트
     Combat combat = Combat(player);
-    Subterranean* sub = new Subterranean();
-    combat.Loop(sub);
+    Slave *slv = new Slave();
+    combat.Loop(slv);
+
+    //맵 테스트
+    Map map = Map(20);
+    map.RandomRooms();
+    map.Progress();
 }
 
 
