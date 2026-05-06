@@ -6,7 +6,27 @@
 #include "Combat.h"
 #include "Utils.h"
 
-void Entities::Attack() {
+Entities::Entities(const Entities& ent)
+{
+    name = ent.name;
+    desc = ent.desc;
+    nameColor = ent.nameColor;
+    effects = ent.effects;
+
+    hp = ent.hp;
+    atk = ent.atk;
+    spd = ent.spd;
+    exp = ent.exp;
+
+    isDead = ent.isDead;
+    isPlayer = ent.isPlayer;
+
+    target = new Entities();
+    *target = *ent.target; 
+}
+
+void Entities::Attack()
+{
     std::cout << "이 문장이 보이면 오버라이드 안된거임";
 }
 
@@ -27,9 +47,9 @@ void Entities::Dead()
 
 Entities Entities::Clone()
 {
-    //this = Entities* entitiy = new Entitiies();
-    Entities *ent = new Entities();
-    return *ent;
+    Entities *ret = new Entities();     
+
+    return *ret;
 }
 
 void Player::Attack()

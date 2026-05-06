@@ -28,6 +28,9 @@ class Entities {
 
     Entities* target;
 
+    Entities() = default;
+    Entities(const Entities& ent); //복사 생성자
+
     virtual void Attack();
     virtual void TakeTurn();
     virtual void Dead();
