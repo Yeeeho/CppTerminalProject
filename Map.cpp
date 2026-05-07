@@ -47,8 +47,7 @@ void Map::RandomRooms()
 
         if (room->isEnemy) {
             room->enemyIdx = EnemyRand(dre);
-
-            Enemies* enemy = new Enemies();
+            room->enemy = new Enemies(*ENEMY_POOL[room->enemyIdx]);
         }
         if (room->isEvent) {
             room->eventIdx = EventRand(dre);

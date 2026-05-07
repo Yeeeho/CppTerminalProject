@@ -20,12 +20,9 @@ void Scenario::DebugScene()
 {
     std::cout << "debugging scene\n";
 
-    //전투 테스트
-    Combat combat = Combat(player);
-    Slave *slv = new Slave();
-    Slave *slv2 = new Slave(*slv);
-    delete slv;
-    combat.Loop(slv2);
+    Map map = Map(20);
+    map.RandomRooms();
+    map.Progress();
 }
 
 
