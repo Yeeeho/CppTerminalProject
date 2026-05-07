@@ -23,11 +23,20 @@ void Combat::TakeDamage(Entities *ent, int damage)
     Utilities util;
     int buffDef = 0;
 
+    std::string name = util.WrapColor(ent->name, ent->nameColor);
+    
     for (auto effect : ent->effects) {
         if (effect->name == "방어") {
             buffDef = effect->buffDef;
         }
     }
+
+    if (buffDef > 0) {
+        std::string defString = std::to_string(buffDef);
+        std::string line = name + " 은 피해를 " + defString + "만큼 방어했다.";
+        util.PrintLine(line, 2);
+    }
+
     damage = damage - buffDef;
     util.IntClamp(damage, 0, 9999999);
 
@@ -36,7 +45,6 @@ void Combat::TakeDamage(Entities *ent, int damage)
 
     std::string thp = std::to_string(ent->hp);
     std::string pthp = std::to_string(prevHp);
-    std::string name = util.WrapColor(ent->name, ent->nameColor);
     std::string line = name + "의 체력 변화: " + pthp + " -> " + thp;
     util.PrintLine(line, 4);
 

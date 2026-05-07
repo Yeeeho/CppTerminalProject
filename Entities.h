@@ -26,7 +26,7 @@ class Entities {
     bool isDead = false;
     bool isPlayer = false;
 
-    Entities* target;
+    Entities* target = nullptr; //초기화 안해주면 야랄남
 
     Entities() = default;
     Entities(const Entities& ent); //복사 생성자

@@ -23,12 +23,9 @@ void Scenario::DebugScene()
     //전투 테스트
     Combat combat = Combat(player);
     Slave *slv = new Slave();
-    combat.Loop(slv);
-
-    //맵 테스트
-    Map map = Map(20);
-    map.RandomRooms();
-    map.Progress();
+    Slave *slv2 = new Slave(*slv);
+    delete slv;
+    combat.Loop(slv2);
 }
 
 

@@ -6,7 +6,7 @@
 #include "Combat.h"
 #include "Utils.h"
 
-Entities::Entities(const Entities& ent)
+Entities::Entities(const Entities &ent) // 복사 생성자
 {
     name = ent.name;
     desc = ent.desc;
@@ -20,9 +20,15 @@ Entities::Entities(const Entities& ent)
 
     isDead = ent.isDead;
     isPlayer = ent.isPlayer;
+    //얌전히 조건문을 쓰도록 하자.
+    if (ent.target == nullptr) {
+        //널포인터의 값에 접근하려고??? 코이츠 겁대가리 없는 www
+        target = nullptr;
+    }
+    else {
+        target = new Entities(*ent.target);
+    }
 
-    target = new Entities();
-    *target = *ent.target; 
 }
 
 void Entities::Attack()
@@ -73,7 +79,7 @@ Player::Player()
     nameColor = "green";
 
     hp = 100;
-    atk = 10;
+    atk = 20;
     spd = 10;
     exp = 0;
 
@@ -155,6 +161,10 @@ Slave::Slave()
     exp = 5;
 }
 
+Slave::~Slave()
+{
+}
+
 void Slave::TakeTurn()
 {
     this->Attack();
@@ -171,10 +181,6 @@ void Slave::Attack()
     combat.TakeDamage(this->target, this->atk);
 }
 
-Slave::~Slave()
-{
-
-}
 
 void Subterranean::TakeTurn()
 {
