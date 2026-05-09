@@ -25,5 +25,4 @@ class Scenario {
     void CutCommEnding();
     void DeathEnding();
     void Intro1();
-    void Stage0();
 };

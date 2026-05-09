@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "Entities.h"
+#include "Items.h"
 
 class Room {
     private:
@@ -23,12 +24,10 @@ class Room {
 class Map {
     private:
     Player* player;
+
     public:
     
     std::vector<Room*> rooms;
-    const std::vector<Enemies*> ENEMY_POOL = {
-        new Slave(), new Subterranean()
-    };
 
     Map();
     Map(int rooms);

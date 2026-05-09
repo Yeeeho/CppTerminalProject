@@ -15,10 +15,8 @@ void DebugLoop() {
     scene.DebugScene();
 }
 
-void Init();
-
 int main() {
-    Init();
+    
     system("");
     DebugLoop();
 
@@ -38,11 +36,6 @@ int main() {
     }
     return 0;
 }
-
-void Init() {
-    en.InitEnemyPool();
-}
-
 
 
 

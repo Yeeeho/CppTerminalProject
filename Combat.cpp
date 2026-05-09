@@ -53,6 +53,15 @@ void Combat::TakeDamage(Entities *ent, int damage)
     }
 }
 
+void Combat::SkillsUI(Player *pl)
+{
+    Utilities util;
+
+    util.PrintLine("사용할 기술을 선택하십시오", 2);
+
+    
+}
+
 void Combat::BattleUI(Entities* entities[])
 {
     Entities* playerUI;
@@ -91,11 +100,16 @@ void Combat::BattleUI(Entities* entities[])
     else effect1 = enemyUI->effects[0]->name;
     std::cout << "지속효과: " + effect0 + "\r\033[20C" + "지속효과: " + effect1 + "\n";
 
+    util.NewLine(1);
+    std::cout << "경험치: " + std::to_string(playerUI->exp);
+
     util.NewLine(4);
 }
 
 void Combat::Loop(Entities* enemy)
 {
+    std::cout << "combat loop";
+
     Utilities util;
     Scenario scene = Scenario(player);
 
@@ -114,6 +128,7 @@ void Combat::Loop(Entities* enemy)
         SpeedSort(entityPool);
         util.LoadingLine("",1);
         std::cout << "\033[2J\033[H";
+
         BattleUI(entityPool);
 
         Entities* curEntity;
@@ -142,17 +157,5 @@ void Combat::Loop(Entities* enemy)
         if (entityPool[targetNum]->isDead) {
             break;
         }
-    }
-
-    if (entityPool[i%2]->isPlayer) {
-        util.PrintLine("전투에서 패배했습니다.", 4);
-        delete player;
-        scene.DeathEnding();
-    }
-    else {
-        line = "전투에서 승리했습니다!";
-        line = util.WrapColor(line, "green");
-        util.PrintLine(line, 4);        
-        delete enemy;
     }
 }

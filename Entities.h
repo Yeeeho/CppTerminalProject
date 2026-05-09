@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "Effects.h"
+#include "Items.h"
 
 class Effects;
 
@@ -16,7 +17,9 @@ class Entities {
     std::string desc;
     std::string nameColor = "red";
 
-    std::vector<Effects*> effects;
+    //벡터 타입은 복사될때 알아서 새로운 메모리를 할당받더라
+    std::vector<Effects*> effects; 
+    std::vector<Items*> dropTable;
 
     int hp;
     int atk;
@@ -33,19 +36,28 @@ class Entities {
 
     virtual void Attack();
     virtual void TakeTurn();
-    virtual void Dead();
+    virtual void Dead(); 
     Entities Clone();
+};
+
+//널포인터 대신에 쓸수 있는 널 객체용 클래스다.
+//아직은 사용하지 않는다.
+class TempEntity : public Entities { 
+    public:
+    TempEntity();  
 };
 
 class Player : public Entities {
     private:
     
     public:
+
     Player();
     ~Player();
 
     void Attack() override;
     void TakeTurn() override;
+    void Dead() override;
     void ShowMenu();
 };
 
@@ -56,8 +68,6 @@ class Enemies : public Entities {
 
     Enemies() = default;
     ~Enemies() = default;
-
-    void InitEnemyPool();
 };
 
 class Slave : public Enemies {

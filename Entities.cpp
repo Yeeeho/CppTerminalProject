@@ -7,11 +7,14 @@
 #include "Utils.h"
 
 Entities::Entities(const Entities &ent) // 복사 생성자
+//하위 클래스에서 알아서 써준다.
 {
     name = ent.name;
     desc = ent.desc;
     nameColor = ent.nameColor;
+
     effects = ent.effects;
+    dropTable = ent.dropTable;
 
     hp = ent.hp;
     atk = ent.atk;
@@ -49,6 +52,20 @@ void Entities::Dead()
     std::string line = this->name + "(이)가 쓰러집니다!";
     line = util.WrapColor(line, "green");
     util.PrintLine(line, 2);
+
+    this->target->exp += this->exp;
+
+    //타겟이 경험치를 획득한다.
+    std::string targetName = this->target->name; //타겟의 이름
+    targetName = util.WrapColor(targetName, this->target->nameColor);
+    std::string expString = std::to_string(this->exp); //경험치
+    expString = util.WrapColor(expString, "green");
+    line = targetName + "는 " + expString + "만큼의 경험치를 얻었습니다.";
+    util.PrintLine(line);
+
+    line = targetName + "의 현재 경험치: " + std::to_string(this->target->exp);
+    util.PrintLine(line);
+    delete this;
 }
 
 Entities Entities::Clone()
@@ -58,20 +75,23 @@ Entities Entities::Clone()
     return *ret;
 }
 
+TempEntity::TempEntity() //혹시 몰라 널포인터 대신에 쓸 널 객체
+{
+    name = "TempEnt";
+    desc = "이 엔티티는 실제로는 쓰이면 안됩니다.";
+}
+
 void Player::Attack()
 {
     Utilities util;
     Combat combat;
 
-    Entities* target = this->target;
-
     std::string playerName = util.WrapColor(this->name, "green");
-    std::string line = playerName + " 이 공격했다.";
+    std::string line = playerName + "이 공격했다.";
     util.PrintLine(line, 2);
 
     combat.TakeDamage(this->target, this->atk);
 }
-
 
 Player::Player()
 {
@@ -79,7 +99,7 @@ Player::Player()
     nameColor = "green";
 
     hp = 100;
-    atk = 20;
+    atk = 10;
     spd = 10;
     exp = 0;
 
@@ -89,6 +109,19 @@ Player::Player()
 void Player::TakeTurn()
 {
     this->ShowMenu();
+}
+
+void Player::Dead()
+{
+    Utilities util;
+
+    this->isDead = true;
+
+    std::string line = "당신은 죽었습니다...";
+    line = util.WrapColor(line, "red");
+    util.PrintLine(line, 2);
+
+    delete this;
 }
 
 void Player::ShowMenu()
@@ -126,11 +159,15 @@ void Player::ShowMenu()
 
         //기술 사용
         else if (input == "3") {
-            
+            util.PrintLine("기술 선택은 아직 미구현이란다..");
+            break;
         }
 
         //아이템 사용
-        else if (input == "4") break;
+        else if (input == "4") {
+            util.PrintLine("아이템 목록입니다.");
+            break;
+        }
         else util.PrintLine("다시 입력하십시오.");
     }
 }
@@ -140,15 +177,6 @@ Player::~Player() {
     hp = 100;
     atk = 10;
     spd = 10;
-}
-
-void Enemies::InitEnemyPool()
-{
-    Enemies enem;
-    Slave* slave = new Slave();
-    Subterranean* sub = new Subterranean();
-    enem.ENEMY_POOL.push_back(slave);
-    enem.ENEMY_POOL.push_back(sub);
 }
 
 Slave::Slave()
@@ -211,5 +239,4 @@ Subterranean::Subterranean()
 Subterranean::~Subterranean()
 {
 }
-
 

@@ -6,6 +6,7 @@
 #include "Entities.h"
 #include "Combat.h"
 #include "Map.h"
+#include "DataPool.h"
 
 Scenario::Scenario()
 {
@@ -20,11 +21,15 @@ void Scenario::DebugScene()
 {
     std::cout << "debugging scene\n";
 
-    Map map = Map(20);
-    map.RandomRooms();
-    map.Progress();
-}
+    Combat combat = Combat(player);
+    Slave* slv = new Slave();
+    combat.Loop(slv);
+    // Map map = Map(30);
+    // map.RandomRooms();
+    // map.Progress();
 
+    std::cout << "debug scene ended\n";
+}
 
 void Scenario::YesOrNo(std::string &input)
 {
@@ -247,10 +252,4 @@ void Scenario::Intro1()
     Combat combat = Combat(player);
     Slave* slv = new Slave();
     combat.Loop(slv);
-}
-
-void Scenario::Stage0()
-{
-    Map map0 = Map(player, 2);
-    map0.Progress();
 }
