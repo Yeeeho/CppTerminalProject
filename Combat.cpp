@@ -53,15 +53,6 @@ void Combat::TakeDamage(Entities *ent, int damage)
     }
 }
 
-void Combat::SkillsUI(Player *pl)
-{
-    Utilities util;
-
-    util.PrintLine("사용할 기술을 선택하십시오", 2);
-
-    
-}
-
 void Combat::BattleUI(Entities* entities[])
 {
     Entities* playerUI;
@@ -101,15 +92,16 @@ void Combat::BattleUI(Entities* entities[])
     std::cout << "지속효과: " + effect0 + "\r\033[20C" + "지속효과: " + effect1 + "\n";
 
     util.NewLine(1);
-    std::cout << "경험치: " + std::to_string(playerUI->exp);
+    std::cout << "경험치: " + std::to_string(playerUI->exp) + "\n";
+
+    std::cout << "여기부턴 디버깅영역" << std::endl;
+    std::cout << enemyUI->dropTable[0]->name << std::endl;
 
     util.NewLine(4);
 }
 
 void Combat::Loop(Entities* enemy)
 {
-    std::cout << "combat loop";
-
     Utilities util;
     Scenario scene = Scenario(player);
 
@@ -126,7 +118,10 @@ void Combat::Loop(Entities* enemy)
     int i = 0;
     while (true) {
         SpeedSort(entityPool);
-        util.LoadingLine("",1);
+        util.PrintLine("아무 키나 입력하여 계속하십시오.");
+        std::string input;
+        std::cin >> input;
+
         std::cout << "\033[2J\033[H";
 
         BattleUI(entityPool);

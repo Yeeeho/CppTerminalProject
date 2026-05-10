@@ -62,6 +62,9 @@ std::string Utilities::TerminalColor(std::string color)
     else if (color == "cyan") {
         ansiColor = "\033[36m";
     }
+    else if (color == "default") {
+        ansiColor = "\033[0m";
+    }
     std::cout << ansiColor;
     return ansiColor;
 }
@@ -113,4 +116,13 @@ void Utilities::IntClamp(int &num, int min, int max)
 {
     if (num > max) num = max;
     else if (num < min) num = min;
+}
+
+void Utilities::YesOrNo(std::string &input)
+{
+    std::cout << "[1] 예\n";
+    std::cout << "[2] 아니오\n";
+    PrintLine("숫자를 입력해서 선택하십시오.\n\n");
+    std::cin >> input;
+    NewLine5();
 }

@@ -5,6 +5,8 @@
 
 #include "Entities.h"
 
+class Entities;
+
 class Utilities {
     public:
     void Wait005();
@@ -27,6 +29,7 @@ class Utilities {
 
     void IntClamp(int& num, int min, int max);
     
+    void YesOrNo(std::string& input);
 };
 
 #endif

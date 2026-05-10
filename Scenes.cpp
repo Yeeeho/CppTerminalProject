@@ -4,6 +4,7 @@
 #include "Utils.h"
 #include "Scenes.h"
 #include "Entities.h"
+#include "Items.h"
 #include "Combat.h"
 #include "Map.h"
 #include "DataPool.h"
@@ -21,9 +22,16 @@ void Scenario::DebugScene()
 {
     std::cout << "debugging scene\n";
 
+    player->inventory.push_back(new IronDagger());
+    player->inventory.push_back(new IronDagger());
+    player->inventory.push_back(new IronDagger());
+    std::cout << player->inventory.size() << std::endl;
+    player->ShowInv();
+
     Combat combat = Combat(player);
     Slave* slv = new Slave();
     combat.Loop(slv);
+
     // Map map = Map(30);
     // map.RandomRooms();
     // map.Progress();
@@ -48,7 +56,7 @@ void Scenario::Init() {
     util.PrintLine("Praise the Machine-spirit");
     util.PrintLine("머신-스피릿에게 영광을", false);
     std::cout << "\n\n\n";
-    std::cout << "\'예아\' 를 입력하여 게임을 시작하십시오\n\n";
+    std::cout << "\'응애\' 를 입력하여 게임을 시작하십시오\n\n";
     std::cout << "\'안해\' 를 입력하여 게임을 종료할 수 있습니다\n\n";
 
     std::string input;
@@ -77,7 +85,7 @@ void Scenario::Init() {
 
         std::string line = "[플레이어 이름]: " + input + "\n\n";
         util.PrintLine(line);
-        util.PrintLine("이 이름으로 하시겠습니까? 중간에 못바꾼다구~\n\n");
+        util.PrintLine("이 이름으로 하시겠습니까?\n\n");
 
         YesOrNo(input);
 
@@ -96,7 +104,6 @@ void Scenario::Init() {
     }
 
     //인트로 스킵 포인트
-    util.PrintLine("이미 인트로를 본 사람이거나.. 디버깅을 하고 있는 컴붕이라면 여기서 건너뛸 수 있습니다.", 50, 0);
     util.PrintLine("특정 키워드를 입력해서 건너뛰세요!", 50, 0);
     while (true) {
         std::cin >> input;

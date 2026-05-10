@@ -1,9 +1,11 @@
 #include <iostream>
 #include <string>
+#include <random>
 
 #include "Entities.h"
 #include "Effects.h"
 #include "Combat.h"
+#include "Items.h"
 #include "Utils.h"
 
 Entities::Entities(const Entities &ent) // 복사 생성자
@@ -15,6 +17,7 @@ Entities::Entities(const Entities &ent) // 복사 생성자
 
     effects = ent.effects;
     dropTable = ent.dropTable;
+    dropChance = ent.dropChance;
 
     hp = ent.hp;
     atk = ent.atk;
@@ -45,6 +48,12 @@ void Entities::TakeTurn() {
 
 void Entities::Dead()
 {
+    static std::default_random_engine dre;
+    static std::bernoulli_distribution dropProb(this->dropChance);
+
+    int dropIdx = this->dropTable.size() - 1;
+    static std::uniform_int_distribution<int> itemRand(0, dropIdx);
+
     Utilities util;
 
     this->isDead = true;
@@ -64,7 +73,25 @@ void Entities::Dead()
     util.PrintLine(line);
 
     line = targetName + "의 현재 경험치: " + std::to_string(this->target->exp);
-    util.PrintLine(line);
+    util.PrintLine(line, 2);
+
+    //플레이어인지 검사한다.
+    if (!this->target->isPlayer) {
+        delete this;
+        return;
+    }
+    Player* player = (Player*)this->target;
+
+    //플레이어가 아이템을 획득한다.
+    std::string input;
+    Items* drop = new Items();
+    int itemIdx = itemRand(dre);
+    *drop = *this->dropTable[itemIdx];
+
+    if (dropProb(dre)) {
+        player->LootItem(drop);
+    }
+
     delete this;
 }
 
@@ -104,6 +131,8 @@ Player::Player()
     exp = 0;
 
     isPlayer = true;
+    
+    invSize = 6;
 }
 
 void Player::TakeTurn()
@@ -135,7 +164,7 @@ void Player::ShowMenu()
     util.PrintLine("[1] 공격", true, 200, 0);
     util.PrintLine("[2] 방어", true, 200, 0);
     util.PrintLine("[3] 기술 사용", true, 200, 0);
-    util.PrintLine("[4] 아이템 사용", true, 200, 0);
+    util.PrintLine("[4] 아이템 및 장비", true, 200, 0);
     util.NewLine(3);
 
     std::string input;
@@ -148,7 +177,6 @@ void Player::ShowMenu()
             this->Attack();
             break;
         }
-
         //관찰
         else if (input == "2") {
             util.PrintLine("당신은 방어자세를 취합니다");
@@ -156,19 +184,81 @@ void Player::ShowMenu()
             this->effects.push_back(defence);
             break;
         }
-
         //기술 사용
         else if (input == "3") {
             util.PrintLine("기술 선택은 아직 미구현이란다..");
             break;
         }
-
         //아이템 사용
         else if (input == "4") {
-            util.PrintLine("아이템 목록입니다.");
+            this->ShowInv();
             break;
         }
+
         else util.PrintLine("다시 입력하십시오.");
+    }
+}
+
+void Player::ShowInv()
+{
+    Utilities util;
+
+    std::string line = "인벤토리";
+    line = util.WrapColor(line, "yellow");
+    util.PrintLine(line, 2);
+
+    int i = 1;
+    for (Items* item : this->inventory) {
+        std::string itemname = util.WrapColor(item->name, item->nameColor);
+        std::string num = std::to_string(i);
+        line = "[" + num + "]" + itemname;
+        std::cout << line << std::endl;
+        i += 1;
+    }
+    util.NewLine(1);
+    util.PrintLine("숫자를 입력하여 선택하십시오.", 2);
+
+    int intinput;
+    std::cin >> intinput;
+    util.NewLine(1);
+    Items* curItem = this->inventory[intinput-1];
+    curItem->ShowItemInfo();   
+    util.NewLine(1);
+    curItem->ShowItemMenu();
+
+    util.PrintLine("아무 키나 입력하여 계속하십시오.");
+}
+
+void Player::LootItem(Items *drop)
+{
+    Utilities util;
+
+    std::string itemname = util.WrapColor(drop->name, drop->nameColor);
+
+    std::string line = itemname + " 발견!";
+    util.PrintLine(line, 2);
+
+    line = "아이템을 얻으시겠습니까?";
+    line = util.WrapColor(line, "yellow");
+    util.PrintLine(line);
+    std::string input;
+    util.YesOrNo(input);
+
+    while (true) {
+        if (input == "1") {
+            std::string itemname = util.WrapColor(drop->name, drop->nameColor);
+            line = itemname + " 을 획득했다!";
+            util.PrintLine(line);
+
+            this->inventory.push_back(drop);
+            break;
+        }
+        else if (input == "2") {
+            util.PrintLine("아이템을 포기합니다.", 2);
+            delete drop;
+            break;
+        }
+        else util.PrintLine("다시 입력하십시오.", 2);
     }
 }
 
@@ -183,10 +273,15 @@ Slave::Slave()
 {
     name = "노예";
     desc = "이 친구는 말라비틀어진 사람의 몸에 전자부품이 덕지덕지 붙은 머리를 하고 있습니다.\n힘없이 움직이는 모습이 자기 의지로 움직이는 것 같진 않군요.\n";
-    hp = 20;
+    hp = 10;
     atk = 10;
     spd = 5;
     exp = 5;
+
+    dropTable = {
+        new IronDagger(), new RagCape()
+    };
+    dropChance = 0.3;
 }
 
 Slave::~Slave()
@@ -234,6 +329,8 @@ Subterranean::Subterranean()
     atk = 15;
     spd = 10;
     exp = 10;
+
+    dropChance = 0.1;
 }
 
 Subterranean::~Subterranean()

@@ -20,6 +20,7 @@ class Entities {
     //벡터 타입은 복사될때 알아서 새로운 메모리를 할당받더라
     std::vector<Effects*> effects; 
     std::vector<Items*> dropTable;
+    float dropChance;
 
     int hp;
     int atk;
@@ -52,6 +53,11 @@ class Player : public Entities {
     
     public:
 
+    std::vector<Items*> inventory;
+    int invSize;
+
+    std::vector<Equipments*> wornGears;
+
     Player();
     ~Player();
 
@@ -59,6 +65,8 @@ class Player : public Entities {
     void TakeTurn() override;
     void Dead() override;
     void ShowMenu();
+    void ShowInv();
+    void LootItem(Items* drop);
 };
 
 class Enemies : public Entities {

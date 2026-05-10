@@ -12,7 +12,6 @@ class Combat {
 
     void SpeedSort(Entities* entities[]);
     void TakeDamage(Entities* entity, int damage);
-    void SkillsUI(Player* pl);
     void BattleUI(Entities* entities[]);
     void Loop(Entities* enemy);
 };
