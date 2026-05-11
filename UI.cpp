@@ -3,25 +3,52 @@
 #include "UI.h"
 #include "Utils.h"
 
-std::vector<UI*> UIState::UIStack = {}; //정적 멤버 변수 초기화
+std::vector<UIState*> UIState::UIStack = {}; //정적 멤버 변수 초기화
 
-using uiFunc = void (UI::*)(); //ui클래스의 멤버 함수 포인터 타입
+static bool isDebug = true;
 
 UI* UI::GetObject()
 {
     return this;
 }
 
-void UI::Return()
+UIState::UIState(UI* uiParam, UIFunc uifParam)
 {
-        UIState::UIStack.pop_back();
-        std::cout << "UIStack Size: ";
-        std::cout << UIState::UIStack.size() << std::endl;
+    uiObj = uiParam; //참조만 하므로 포인터를 복사한다.
+    uiFunc = uifParam;
+}
 
-        UI* uiInstance = UIState::UIStack[UIState::UIStack.size() - 1];
-        uiInstance = uiInstance->GetObject();
-        if (uiInstance->curFunc == nullptr) std::cout << "응애";
-        (uiInstance->*uiInstance->curFunc)();
+void UI::Goback()
+{
+    std::cout << "이전 메뉴로 돌아갑니다." << std::endl;
+
+    UIState* lastUis = UIState::UIStack[UIState::UIStack.size() - 1];
+    UIState::UIStack.pop_back(); //현재 실행한 포인터 함수를 스택에서 지움
+    delete lastUis;
+    std::cout << "Popped, current UIStack Size: ";
+    std::cout << UIState::UIStack.size() << std::endl;
+
+    UIState* uis = UIState::UIStack[UIState::UIStack.size() - 1];
+    if (uis->uiObj == nullptr) std::cout << "널포인터 오브젝트다." << std::endl;
+    if (uis->uiFunc == nullptr) std::cout << "널포인터 함수." << std::endl;
+    (uis->uiObj->*uis->uiFunc)(); //전에 실행했던 함수를 스택에서 호출 
+}
+
+void UI::StackUI(UIFunc pfunc)
+{
+    if (!this->isStacked) { 
+        UIFunc curFunc = (UIFunc) pfunc;
+        UIState* uis = new UIState(this, curFunc);
+        uis->uiObj->isStacked = true;
+        
+        uis->uiObj->isStacked = true;
+        UIState::UIStack.push_back(uis);   
+    }
+    
+    if (isDebug) {
+    std::cout << "current UIStack Size: ";
+    std::cout << UIState::UIStack.size() << std::endl;
+    }
 }
 
 PlayerUI::PlayerUI(Player *playerInj)
@@ -31,17 +58,12 @@ PlayerUI::PlayerUI(Player *playerInj)
 
 void PlayerUI::ShowInv()
 {
-
-    this->curFunc = (uiFunc) &PlayerUI::ShowInv; //일일이 할당하면 의존성이 높아지긴 하지만.. 일단 템플릿 배우기 전이니..
-    UIState::UIStack.push_back(this);
-
-    std::cout << "Inv" << std::endl;
-    std::cout << "UIStack Size: ";
-    std::cout << UIState::UIStack.size() << std::endl;
+    StackUI((UIFunc)&PlayerUI::ShowInv);
 
     Utilities util;
 
-    std::string line = "인벤토리";
+    std::cout << player->name;
+    std::string line = "의 인벤토리";
     line = util.WrapColor(line, "yellow");
     util.PrintLine(line, 2);
 
@@ -150,27 +172,22 @@ void ItemUI::ShowEquipInfo()
 
 void ItemUI::ShowItemMenu()
 {
-    this->curFunc = (uiFunc) &ItemUI::ShowItemMenu;
-    UIState::UIStack.push_back(this);
-
-    std::cout << "ItemMenu" << std::endl;
-    std::cout << "UIStack Size: ";
-    std::cout << UIState::UIStack.size() << std::endl;
+    StackUI((UIFunc)&ItemUI::ShowItemMenu);
 
     Utilities util;
 
     std::string line;
     line = util.WrapColor("무엇을 하시겠습니까?", "yellow");
     util.PrintLine(line, 2);
-    DisPosebutton(1);
+    DisPoseButton(1);
     ToInvButton(2);
 
     std::string input;
     std::cin >> input;
     if (input == "1") {
-        DisPoseWarning();
+        DisPoseItem();
     } 
-    else if (input == "2") Return();
+    else if (input == "2") Goback();
 }
 
 void ItemUI::ToInvButton(int num)
@@ -179,20 +196,15 @@ void ItemUI::ToInvButton(int num)
     std::cout << "["+ strnum +"] 인벤토리로 돌아가기" << std::endl;
 }
 
-void ItemUI::DisPosebutton(int num)
+void ItemUI::DisPoseButton(int num)
 {
     std::string strnum = std::to_string(num);
     std::cout << "["+ strnum +"] 아이템 버리기" << std::endl;
 }
 
-void ItemUI::DisPoseWarning()
+void ItemUI::DisPoseItem()
 {
-    this->curFunc = (uiFunc) &ItemUI::DisPoseWarning;
-    UIState::UIStack.push_back(this);
-
-    std::cout << "warning" << std::endl;
-    std::cout << "UIStack Size: ";
-    std::cout << UIState::UIStack.size() << std::endl;
+    StackUI((UIFunc)&ItemUI::DisPoseItem);
 
     Utilities util;
 
@@ -202,6 +214,7 @@ void ItemUI::DisPoseWarning()
     util.YesOrNo(input);
     if (input == "1") delete this->item;
     if (input == "2") {
-        Return();
+        Goback();
     }
 }
+

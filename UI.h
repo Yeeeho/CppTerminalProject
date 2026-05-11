@@ -1,26 +1,36 @@
 #pragma once
 
 #include <vector>
+#include <memory>
 
 #include "System.h"
 #include "Items.h"
 
 class UI;
 
+using UIFunc = void (UI::*)(); //주의할점.. 함수 포인터는 공변반환이 안됨.
+
 class UI {
 
     public:
+    static std::vector<UI*> UIStack;
+    UIFunc uiFunc = nullptr;
+    bool isStacked = false; //스택이 되었는가?
 
-    using UIFunc = void (UI::*)(); //주의할점.. 함수 포인터는 공변반환이 안됨.
-    UI::UIFunc curFunc = nullptr;
+    UI() = default;
 
     virtual UI* GetObject(); //공변 반환을 통해 정확한 타입을 반환시킴.
-    void Return();
+    void Goback();
+    void StackUI(UIFunc);
 };
 
-class UIState : public GameObject {
+class UIState { //상태 저장용 클래스
     public:
-    static std::vector<UI*> UIStack;
+    static std::vector<UIState*> UIStack;
+
+    UI* uiObj = nullptr; //저장할 UI클래스 객체
+    UIFunc uiFunc = nullptr; //저장할 UI클래스 함수
+    UIState(UI*, UIFunc);
 };
 
 class PlayerUI : public UI {
@@ -28,12 +38,10 @@ class PlayerUI : public UI {
     public:
     Player* player = nullptr; //주입받을 인스턴스
 
-    using UIFunc = void (PlayerUI::*)();
-
     PlayerUI(Player* pl);
     void ShowInv();
 
-    PlayerUI* GetObject();
+    PlayerUI* GetObject() override;
 };
 
 class ItemUI : public UI {
@@ -41,18 +49,16 @@ class ItemUI : public UI {
 
     Items* item = nullptr;
 
-    using UIFunc = void (ItemUI::*)();
-
     ItemUI() = default;
     ItemUI(Items* item);
 
-    ItemUI* GetObject();
+    ItemUI* GetObject() override;
 
     void ShowInfo();
 
     void ShowName();
     void ShowDesc();
-    void ShowVal();
+    void ShowVal();   
     void ShowItemInfo();
 
     void ShowAtk();
@@ -60,9 +66,9 @@ class ItemUI : public UI {
     void ShowEquipInfo();
 
     void ShowItemMenu();
-    void ToInvButton(int num);
-    void DisPosebutton(int num);
-    void DisPoseWarning();
 
-    void DisposeItem();
+    void ToInvButton(int num);
+    void DisPoseButton(int num);
+
+    void DisPoseItem();
 };
