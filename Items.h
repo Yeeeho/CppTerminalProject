@@ -3,23 +3,26 @@
 #include <string>
 #include <vector>
 
+#include "System.h"
 #include "Utils.h"
 
-class Items {
+enum class ItemType { //열거형 응가
+    Item,
+    Equipment
+};
+
+class Items : public GameObject{
     private:
     public:
     std::string name;
     std::string nameColor;
+    ItemType type = ItemType::Item;
     std::string desc;
     int value;
-    void ShowName();
-    void ShowDesc();
-    void ShowVal();
-    virtual void ShowItemInfo();
+
     void DisposeButton(int num);
     void DisposeItem();
     void ToInvButton(int num);
-    void ToInv();
     virtual void ShowItemMenu();
 };
 
@@ -28,9 +31,8 @@ class Equipments : public Items {
     public:
     int atk;
     int def;
-    Equipments() = default;
+    Equipments();
     Equipments(Equipments* eq);
-    void ShowItemInfo() override;
 };
 
 class Weapons : public Equipments {

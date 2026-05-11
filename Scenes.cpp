@@ -2,6 +2,7 @@
 #include <string>
 
 #include "Utils.h"
+#include "UI.h"
 #include "Scenes.h"
 #include "Entities.h"
 #include "Items.h"
@@ -20,13 +21,15 @@ Scenario::Scenario(Player *p)
 
 void Scenario::DebugScene()
 {
+    PlayerUI pui = PlayerUI(player);
+
     std::cout << "debugging scene\n";
 
     player->inventory.push_back(new IronDagger());
     player->inventory.push_back(new IronDagger());
     player->inventory.push_back(new IronDagger());
     std::cout << player->inventory.size() << std::endl;
-    player->ShowInv();
+    pui.ShowInv();
 
     Combat combat = Combat(player);
     Slave* slv = new Slave();

@@ -3,12 +3,15 @@
 #include <string>
 #include <vector>
 
+#include "System.h"
 #include "Effects.h"
 #include "Items.h"
 
 class Effects;
+class Items;
+class Equipments;
 
-class Entities {
+class Entities : public GameObject {
     private:
 
     public:
@@ -65,7 +68,6 @@ class Player : public Entities {
     void TakeTurn() override;
     void Dead() override;
     void ShowMenu();
-    void ShowInv();
     void LootItem(Items* drop);
 };
 

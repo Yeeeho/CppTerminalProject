@@ -7,6 +7,7 @@
 #include "Combat.h"
 #include "Items.h"
 #include "Utils.h"
+#include "UI.h"
 
 Entities::Entities(const Entities &ent) // 복사 생성자
 //하위 클래스에서 알아서 써준다.
@@ -155,6 +156,7 @@ void Player::Dead()
 
 void Player::ShowMenu()
 {
+    PlayerUI pui = PlayerUI(this);
     Utilities util;
     Combat combat;
 
@@ -191,42 +193,12 @@ void Player::ShowMenu()
         }
         //아이템 사용
         else if (input == "4") {
-            this->ShowInv();
+            pui.ShowInv();
             break;
         }
 
         else util.PrintLine("다시 입력하십시오.");
     }
-}
-
-void Player::ShowInv()
-{
-    Utilities util;
-
-    std::string line = "인벤토리";
-    line = util.WrapColor(line, "yellow");
-    util.PrintLine(line, 2);
-
-    int i = 1;
-    for (Items* item : this->inventory) {
-        std::string itemname = util.WrapColor(item->name, item->nameColor);
-        std::string num = std::to_string(i);
-        line = "[" + num + "]" + itemname;
-        std::cout << line << std::endl;
-        i += 1;
-    }
-    util.NewLine(1);
-    util.PrintLine("숫자를 입력하여 선택하십시오.", 2);
-
-    int intinput;
-    std::cin >> intinput;
-    util.NewLine(1);
-    Items* curItem = this->inventory[intinput-1];
-    curItem->ShowItemInfo();   
-    util.NewLine(1);
-    curItem->ShowItemMenu();
-
-    util.PrintLine("아무 키나 입력하여 계속하십시오.");
 }
 
 void Player::LootItem(Items *drop)

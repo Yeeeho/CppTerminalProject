@@ -1,11 +1,13 @@
-#ifndef UTILS_H
-#define UTILS_H
+#pragma once
 
 #include <string>
 
 #include "Entities.h"
 
 class Entities;
+class Utilities;
+
+// static Utilities* util; 전역에 쓸 인스턴스 였던것
 
 class Utilities {
     public:
@@ -31,5 +33,3 @@ class Utilities {
     
     void YesOrNo(std::string& input);
 };
-
-#endif

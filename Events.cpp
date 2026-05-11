@@ -7,7 +7,7 @@
 void Events::ItemEvent()
 {
     static std::default_random_engine dre;
-    static std::uniform_int_distribution itemIdx(0,1);
+    static std::uniform_int_distribution<int> itemIdx(0,1);
 
     DataPool pool;
     Equipments* eq = new Equipments();
