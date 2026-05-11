@@ -31,9 +31,9 @@ void Scenario::DebugScene()
     std::cout << player->inventory.size() << std::endl;
     pui.ShowInv();
 
-    Combat combat = Combat(player);
-    Slave* slv = new Slave();
-    combat.Loop(slv);
+    // Combat combat = Combat(player);
+    // Slave* slv = new Slave();
+    // combat.Loop(slv);
 
     // Map map = Map(30);
     // map.RandomRooms();

@@ -5,9 +5,23 @@
 
 std::vector<UI*> UIState::UIStack = {}; //정적 멤버 변수 초기화
 
+using uiFunc = void (UI::*)(); //ui클래스의 멤버 함수 포인터 타입
+
 UI* UI::GetObject()
 {
     return this;
+}
+
+void UI::Return()
+{
+        UIState::UIStack.pop_back();
+        std::cout << "UIStack Size: ";
+        std::cout << UIState::UIStack.size() << std::endl;
+
+        UI* uiInstance = UIState::UIStack[UIState::UIStack.size() - 1];
+        uiInstance = uiInstance->GetObject();
+        if (uiInstance->curFunc == nullptr) std::cout << "응애";
+        (uiInstance->*uiInstance->curFunc)();
 }
 
 PlayerUI::PlayerUI(Player *playerInj)
@@ -17,9 +31,11 @@ PlayerUI::PlayerUI(Player *playerInj)
 
 void PlayerUI::ShowInv()
 {
-    this->curFunc = &PlayerUI::ShowInv; //일일이 할당하면 의존성이 높아지긴 하지만.. 일단 템플릿 배우기 전이니..
+
+    this->curFunc = (uiFunc) &PlayerUI::ShowInv; //일일이 할당하면 의존성이 높아지긴 하지만.. 일단 템플릿 배우기 전이니..
     UIState::UIStack.push_back(this);
 
+    std::cout << "Inv" << std::endl;
     std::cout << "UIStack Size: ";
     std::cout << UIState::UIStack.size() << std::endl;
 
@@ -49,7 +65,7 @@ void PlayerUI::ShowInv()
     itemui.ShowInfo();
 
     util.NewLine(1);
-    curItem->ShowItemMenu();
+    itemui.ShowItemMenu();
 }
 
 PlayerUI* PlayerUI::GetObject()
@@ -134,8 +150,12 @@ void ItemUI::ShowEquipInfo()
 
 void ItemUI::ShowItemMenu()
 {
-    this->curFunc = &ItemUI::ShowItemMenu;
+    this->curFunc = (uiFunc) &ItemUI::ShowItemMenu;
     UIState::UIStack.push_back(this);
+
+    std::cout << "ItemMenu" << std::endl;
+    std::cout << "UIStack Size: ";
+    std::cout << UIState::UIStack.size() << std::endl;
 
     Utilities util;
 
@@ -144,8 +164,13 @@ void ItemUI::ShowItemMenu()
     util.PrintLine(line, 2);
     DisPosebutton(1);
     ToInvButton(2);
-    int input;
+
+    std::string input;
     std::cin >> input;
+    if (input == "1") {
+        DisPoseWarning();
+    } 
+    else if (input == "2") Return();
 }
 
 void ItemUI::ToInvButton(int num)
@@ -162,8 +187,12 @@ void ItemUI::DisPosebutton(int num)
 
 void ItemUI::DisPoseWarning()
 {
-    this->curFunc = &ItemUI::DisPoseWarning;
+    this->curFunc = (uiFunc) &ItemUI::DisPoseWarning;
     UIState::UIStack.push_back(this);
+
+    std::cout << "warning" << std::endl;
+    std::cout << "UIStack Size: ";
+    std::cout << UIState::UIStack.size() << std::endl;
 
     Utilities util;
 
@@ -173,11 +202,6 @@ void ItemUI::DisPoseWarning()
     util.YesOrNo(input);
     if (input == "1") delete this->item;
     if (input == "2") {
-        UIState::UIStack.pop_back();
+        Return();
     }
-}
-
-void ItemUI::ToInv()
-{
-
 }

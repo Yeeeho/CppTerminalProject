@@ -15,6 +15,7 @@ class UI {
     UI::UIFunc curFunc = nullptr;
 
     virtual UI* GetObject(); //공변 반환을 통해 정확한 타입을 반환시킴.
+    void Return();
 };
 
 class UIState : public GameObject {
@@ -28,7 +29,6 @@ class PlayerUI : public UI {
     Player* player = nullptr; //주입받을 인스턴스
 
     using UIFunc = void (PlayerUI::*)();
-    PlayerUI::UIFunc curFunc = nullptr;
 
     PlayerUI(Player* pl);
     void ShowInv();
@@ -42,7 +42,6 @@ class ItemUI : public UI {
     Items* item = nullptr;
 
     using UIFunc = void (ItemUI::*)();
-    ItemUI::UIFunc curFunc = nullptr;
 
     ItemUI() = default;
     ItemUI(Items* item);
@@ -66,5 +65,4 @@ class ItemUI : public UI {
     void DisPoseWarning();
 
     void DisposeItem();
-    void ToInv();
 };
