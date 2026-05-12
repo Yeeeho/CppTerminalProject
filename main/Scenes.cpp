@@ -21,7 +21,6 @@ Scenario::Scenario(Player *p)
 
 void Scenario::DebugScene()
 {
-    PlayerUI pui = PlayerUI(player);
 
     std::cout << "debugging scene\n";
 
@@ -29,7 +28,8 @@ void Scenario::DebugScene()
     player->inventory.push_back(new IronDagger());
     player->inventory.push_back(new IronDagger());
     std::cout << player->inventory.size() << std::endl;
-    pui.ShowInv();
+    InvUI inv = InvUI(player);
+    inv.Show();
 
     // Combat combat = Combat(player);
     // Slave* slv = new Slave();

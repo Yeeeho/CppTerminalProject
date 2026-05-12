@@ -193,7 +193,7 @@ void Player::ShowMenu()
         }
         //아이템 사용
         else if (input == "4") {
-            pui.ShowInv();
+            InvUI(this).Show();
             break;
         }
 
