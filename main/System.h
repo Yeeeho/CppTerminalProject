@@ -1,5 +1,12 @@
 #pragma once
 
-class GameObject {
+class Player;
+
+class GameSystem {
+    public:
+    static GameSystem *player;
+};
+
+class GameObject : public GameSystem {
 
 };

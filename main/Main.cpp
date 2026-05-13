@@ -3,15 +3,13 @@
 #include <thread>
 #include <chrono>
 
+#include "System.h"
 #include "Scenes.h"
 #include "Entities.h"
 
-Player* player = new Player();
-//씨발 생성자 주입
-Scenario scene = Scenario(player);
-Enemies en;
-
 void DebugLoop() {
+    Player* player = new Player();
+    Scenario scene = Scenario(player);
     scene.DebugScene();
 }
 
@@ -19,6 +17,8 @@ int main() {
     
     system("");
     DebugLoop();
+    
+    Scenario scene = Scenario((Player*)GameSystem::player);
 
     while (true) {
         scene.Init();

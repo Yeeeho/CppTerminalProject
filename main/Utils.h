@@ -32,4 +32,24 @@ class Utilities {
     void IntClamp(int& num, int min, int max);
     
     void YesOrNo(std::string& input);
+
+    template <typename T>
+    void EraseOneElem(std::vector<T>& ,T);
 };
+
+template <typename T>
+inline void Utilities::EraseOneElem(std::vector<T>& vector, T elemParam)
+{
+    if (vector.begin() == vector.end()) { //벡터가 비었을때.
+        std::cout << "vector is empty!!" << std::endl;
+        return;
+    }
+
+    for(auto elem = vector.begin(); elem != vector.end(); ++elem) {
+        if (*elem == elemParam) {
+            vector.erase(elem);
+            break; //원소 하나만 찍 삭제하고 튄다.
+            //근데 하나만 삭제하는게 아니면 꼬여버리므로 주의해야함.
+        }
+    }
+}

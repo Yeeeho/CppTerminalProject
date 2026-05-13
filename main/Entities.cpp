@@ -2,6 +2,7 @@
 #include <string>
 #include <random>
 
+#include "System.h"
 #include "Entities.h"
 #include "Effects.h"
 #include "Combat.h"
@@ -123,6 +124,8 @@ void Player::Attack()
 
 Player::Player()
 {
+    GameSystem::player = this;
+
     name = "default_name";
     nameColor = "green";
 

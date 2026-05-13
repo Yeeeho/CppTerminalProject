@@ -5,43 +5,76 @@
 #include "Items.h"
 
 
+std::vector<UI*> UI::uiStack = {};
+
 void UI::Show()
 {
 }
 
 void UI::Stack()
 {
+    if (isDebug) {
+
+        std::cout << "is this stacked: ";
+        std::cout << this->isStacked << std::endl;
+    }
+
     if (!this->isStacked) {
         this->isStacked = true;
         uiStack.push_back(this);
     }
 
-    std::cout << "current stack size:";
-    std::cout << uiStack.size() << std::endl;
+    if (isDebug) {        
+        std::cout << "current ui stack size:";
+        std::cout << uiStack.size() << std::endl;
+    }
 }
 
-void UI::Goback()
+void UI::Goback(int num)
 {
-    std::cout << "이전 메뉴로 돌아갑니다." << std::endl;
+    std::cout << "이전 메뉴로 돌아갑니다.\n" << std::endl;
 
-    UI* last = uiStack.back();
-    delete last;
-    uiStack.pop_back();
+    for (int i = 0; i < num; i++) {        
+        UI* last = uiStack.back();
+        delete last;
+        uiStack.pop_back();
+    }
+
+    if (uiStack.empty()) std::cout << "ui 스택이 비었는뎁쇼?" << std::endl;
 
     UI* prev = uiStack.back();
-    last->Show();
+    prev->Show();
 }
 
-ItemUI::ItemUI(Items* it) { //생성자에서 타입변환
-    item = it;
-    switch (item->type)
-    {
-    case ItemType::Equipment:
-        
-        break;
-    default:
-        break;
+bool UI::YesOrNo()
+{
+    Utilities util;
+
+    std::string line = "숫자를 입력해서 선택하십시오.\n\n";
+    util.PrintLine(util.WrapColor(line, "yellow"));
+    std::cout << "[1] 예\n";
+    std::cout << "[2] 아니오\n";
+    util.NewLine(1);
+    int input;
+    while(true) {
+        std::cin >> input;
+        util.NewLine(1);
+        switch(input) {
+            case 1:
+                return true;
+                break;
+            case 2:
+                return false;
+                break;
+            default:
+                std::cout << "다시 입력하십시오.\n" << std::endl;
+        }
     }
+}
+
+ItemUI::ItemUI(Items* it) { 
+    player = (Player*) GameSystem::player;
+    item = it;
 }
 
 PlayerUI::PlayerUI(Player*p) { //생성자 주입
@@ -55,6 +88,9 @@ InvUI::InvUI(Player *p)
 
 void ItemUI::Show()
 {
+
+    std::cout << "아이템 메뉴" << std::endl;
+
     Utilities util;
 
     this->Stack();
@@ -77,9 +113,11 @@ void InvUI::Show()
 
     this->Stack();
 
-    std::string line = player->name + "의 인벤토리";
+    std::string line = player->name + "의 인벤토리\n아이템 개수: ";
     line = util.WrapColor(line, "yellow");
-    util.PrintLine(line, 2);
+    util.PrintLine(line, 0);
+    std::cout << player->inventory.size() << std::endl;
+    util.NewLine(1);
 
     int i = 1;
     for (Items* item : player->inventory) {
@@ -95,8 +133,8 @@ void InvUI::Show()
     std::cin >> intinput;
     util.NewLine(1);
     Items* curItem = player->inventory[intinput-1];
-    ItemUI itemui = ItemUI(curItem);
-    itemui.Show();
+    ItemUI* itemui = new ItemUI(curItem);
+    itemui->Show();
 }
 
 void ItemUI::ShowItem() {
@@ -113,26 +151,48 @@ void ItemUI::ShowItem() {
     int input;
     while (true) {
         std:: cin >> input;
-        if (input == 1) {
-            
-            break;
+        switch(input) {
+            case 1:
+                new DisPoseUI(item);
+                break;
+            case 2:
+                Goback();
+                break;
+            default:
+                std::cout << "다시 입력해 주십시오" << std::endl;
         }
-        else if (input == 2) {
-
-            break;
-        }
-        else std::cout << "다시 입력해 주십시오" << std::endl;
     }
 }
 
 void ItemUI::ShowEq()
 {
+    Utilities util;
+
     ShowName();
     ShowDesc();
     ShowAtk();
     ShowDef();
     std::cout << std::endl;
     ShowVal();
+    std::string line = util.WrapColor("무엇을 하시겠습니까?", "yellow");
+    util.PrintLine(line, 2);
+    DisPoseButton(1);
+    GobackButton(2);
+
+    int input;
+    while (true) {
+        std:: cin >> input;
+        switch(input) {
+            case 1:
+                (new DisPoseUI(item))->Show();
+                break;
+            case 2:
+                Goback();
+                break;
+            default:
+                std::cout << "다시 입력해 주십시오" << std::endl;
+        }
+    }
 }
 
 void ItemUI::ShowName()
@@ -182,4 +242,28 @@ void ItemUI::ShowDef()
     
     std::string itemval = std::to_string(eq->def);
     std::cout << "방어력: " + itemval  << std::endl;
+}
+
+void DisPoseUI::Show()
+{
+    Utilities util;
+
+    this->Stack();
+
+    util.NewLine(1);
+    std::cout << "아이템을 정말 버리시겠습니까? 다시 획득할수 없어요." << std::endl;
+    if(YesOrNo()) {
+        delete item;
+        util.EraseOneElem(player->inventory, item);
+        item = nullptr;
+        Goback();
+    }
+    else {
+        Goback();
+    }
+}
+
+DisPoseUI::DisPoseUI(Items* it)
+{
+    item = it;
 }

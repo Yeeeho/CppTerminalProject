@@ -1,8 +1,14 @@
 #include <iostream>
 #include <string>
 
+#include "System.h"
 #include "Utils.h"
 #include "Items.h"
+
+Items::~Items()
+{
+    std::cout << "아이템이 삭제되었습니다." << std::endl;
+}
 
 void Items::DisposeButton(int num)
 {

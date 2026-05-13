@@ -28,8 +28,8 @@ void Scenario::DebugScene()
     player->inventory.push_back(new IronDagger());
     player->inventory.push_back(new IronDagger());
     std::cout << player->inventory.size() << std::endl;
-    InvUI inv = InvUI(player);
-    inv.Show();
+    InvUI *inv = new InvUI(player);
+    inv->Show();
 
     // Combat combat = Combat(player);
     // Slave* slv = new Slave();

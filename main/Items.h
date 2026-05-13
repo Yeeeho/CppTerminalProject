@@ -6,12 +6,12 @@
 #include "System.h"
 #include "Utils.h"
 
-enum class ItemType { //열거형 응가
+enum class ItemType { //열거형 응가(클래스)
     Item,
     Equipment
 };
 
-class Items : public GameObject{
+class Items : public GameObject {
     private:
     public:
     std::string name;
@@ -19,6 +19,8 @@ class Items : public GameObject{
     ItemType type = ItemType::Item;
     std::string desc;
     int value;
+
+    ~Items();
 
     void DisposeButton(int num);
     void DisposeItem();
