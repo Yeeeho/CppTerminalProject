@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include <string>
 
 #include "Entities.h"
@@ -31,8 +32,6 @@ class Utilities {
 
     void IntClamp(int& num, int min, int max);
     
-    void YesOrNo(std::string& input);
-
     template <typename T>
     void EraseOneElem(std::vector<T>& ,T);
 };

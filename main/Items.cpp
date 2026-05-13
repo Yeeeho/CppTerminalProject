@@ -16,20 +16,6 @@ void Items::DisposeButton(int num)
     std::cout << "["+ strnum +"] 아이템 버리기" << std::endl;
 }
 
-void Items::DisposeItem()
-{
-    Utilities util;
-
-    util.PrintLine("아이템을 버리면 다시 획득할 수 없습니다.");
-    util.PrintLine("그래도 버리시겠습니까?");
-    std::string input;
-    util.YesOrNo(input);
-    if (input == "1") delete this;
-    if (input == "2") {
-        this->ShowItemMenu();
-    }
-}
-
 void Items::ToInvButton(int num)
 {
     std::string strnum = std::to_string(num);

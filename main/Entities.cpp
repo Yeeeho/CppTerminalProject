@@ -207,6 +207,7 @@ void Player::ShowMenu()
 void Player::LootItem(Items *drop)
 {
     Utilities util;
+    UI ui;
 
     std::string itemname = util.WrapColor(drop->name, drop->nameColor);
 
@@ -216,11 +217,9 @@ void Player::LootItem(Items *drop)
     line = "아이템을 얻으시겠습니까?";
     line = util.WrapColor(line, "yellow");
     util.PrintLine(line);
-    std::string input;
-    util.YesOrNo(input);
 
     while (true) {
-        if (input == "1") {
+        if (ui.YesOrNo()) {
             std::string itemname = util.WrapColor(drop->name, drop->nameColor);
             line = itemname + " 을 획득했다!";
             util.PrintLine(line);
@@ -228,12 +227,11 @@ void Player::LootItem(Items *drop)
             this->inventory.push_back(drop);
             break;
         }
-        else if (input == "2") {
+        else {
             util.PrintLine("아이템을 포기합니다.", 2);
             delete drop;
             break;
         }
-        else util.PrintLine("다시 입력하십시오.", 2);
     }
 }
 

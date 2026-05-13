@@ -21,7 +21,6 @@ Scenario::Scenario(Player *p)
 
 void Scenario::DebugScene()
 {
-
     std::cout << "debugging scene\n";
 
     player->inventory.push_back(new IronDagger());

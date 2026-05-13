@@ -23,7 +23,6 @@ class Items : public GameObject {
     ~Items();
 
     void DisposeButton(int num);
-    void DisposeItem();
     void ToInvButton(int num);
     virtual void ShowItemMenu();
 };

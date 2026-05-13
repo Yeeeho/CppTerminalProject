@@ -40,7 +40,10 @@ void UI::Goback(int num)
         uiStack.pop_back();
     }
 
-    if (uiStack.empty()) std::cout << "ui 스택이 비었는뎁쇼?" << std::endl;
+    if (uiStack.empty()) { //스택이 비면 return 한다.
+        std::cout << "ui 스택이 비었는뎁쇼?" << std::endl;
+        return;
+    } 
 
     UI* prev = uiStack.back();
     prev->Show();
@@ -151,6 +154,7 @@ void ItemUI::ShowItem() {
     int input;
     while (true) {
         std:: cin >> input;
+        util.NewLine(1);
         switch(input) {
             case 1:
                 new DisPoseUI(item);
@@ -182,6 +186,7 @@ void ItemUI::ShowEq()
     int input;
     while (true) {
         std:: cin >> input;
+        util.NewLine(1);
         switch(input) {
             case 1:
                 (new DisPoseUI(item))->Show();
@@ -256,7 +261,7 @@ void DisPoseUI::Show()
         delete item;
         util.EraseOneElem(player->inventory, item);
         item = nullptr;
-        Goback();
+        Goback(2);
     }
     else {
         Goback();
