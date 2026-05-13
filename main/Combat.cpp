@@ -58,6 +58,8 @@ void Combat::BattleUI(Entities* entities[])
     Entities* playerUI;
     Entities* enemyUI;
 
+    std::cout << "\033[2J\033[H";
+
     for (int i = 0; i < 2; i++) {
         if (entities[i]->isPlayer) {
             playerUI = entities[i];
@@ -121,8 +123,6 @@ void Combat::Loop(Entities* enemy)
         util.PrintLine("아무 키나 입력하여 계속하십시오.");
         std::string input;
         std::cin >> input;
-
-        std::cout << "\033[2J\033[H";
 
         BattleUI(entityPool);
 

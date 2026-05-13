@@ -23,20 +23,20 @@ void Scenario::DebugScene()
 {
     std::cout << "debugging scene\n";
 
-    player->inventory.push_back(new IronDagger());
-    player->inventory.push_back(new IronDagger());
-    player->inventory.push_back(new IronDagger());
-    std::cout << player->inventory.size() << std::endl;
-    InvUI *inv = new InvUI(player);
-    inv->Show();
+    // player->inventory.push_back(new IronDagger());
+    // player->inventory.push_back(new IronDagger());
+    // player->inventory.push_back(new IronDagger());
+    // std::cout << player->inventory.size() << std::endl;
+    // InvUI *inv = new InvUI(player);
+    // inv->Show();
 
     // Combat combat = Combat(player);
     // Slave* slv = new Slave();
     // combat.Loop(slv);
 
-    // Map map = Map(30);
-    // map.RandomRooms();
-    // map.Progress();
+    Map map = Map(30);
+    map.RandomRooms();
+    map.Progress();
 
     std::cout << "debug scene ended\n";
 }

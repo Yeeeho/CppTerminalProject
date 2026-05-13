@@ -11,7 +11,6 @@
 #include "UI.h"
 
 Entities::Entities(const Entities &ent) // 복사 생성자
-//하위 클래스에서 알아서 써준다.
 {
     name = ent.name;
     desc = ent.desc;
@@ -41,11 +40,11 @@ Entities::Entities(const Entities &ent) // 복사 생성자
 
 void Entities::Attack()
 {
-    std::cout << "이 문장이 보이면 오버라이드 안된거임";
+    std::cout << "이 문장이 보이면 오버라이드 안된거임" << std::endl;
 }
 
 void Entities::TakeTurn() {
-    std::cout << "이 문장이 보이면 오버라이드 안된거임";
+    std::cout << "이 문장이 보이면 오버라이드 안된거임" << std::endl;
 }
 
 void Entities::Dead()
@@ -77,31 +76,20 @@ void Entities::Dead()
     line = targetName + "의 현재 경험치: " + std::to_string(this->target->exp);
     util.PrintLine(line, 2);
 
-    //플레이어인지 검사한다.
-    if (!this->target->isPlayer) {
-        delete this;
-        return;
-    }
     Player* player = (Player*)this->target;
 
     //플레이어가 아이템을 획득한다.
     std::string input;
-    Items* drop = new Items();
     int itemIdx = itemRand(dre);
-    *drop = *this->dropTable[itemIdx];
-
-    if (dropProb(dre)) {
-        player->LootItem(drop);
-    }
+    Items* drop = this->dropTable[itemIdx]->Clone();
+    player->LootItem(drop);
 
     delete this;
 }
 
-Entities Entities::Clone()
+Entities* Entities::Clone() const
 {
-    Entities *ret = new Entities();     
-
-    return *ret;
+    return new Entities(*this);
 }
 
 TempEntity::TempEntity() //혹시 몰라 널포인터 대신에 쓸 널 객체
@@ -130,7 +118,7 @@ Player::Player()
     nameColor = "green";
 
     hp = 100;
-    atk = 10;
+    atk = 40;
     spd = 10;
     exp = 0;
 
@@ -204,7 +192,7 @@ void Player::ShowMenu()
     }
 }
 
-void Player::LootItem(Items *drop)
+void Player::LootItem(Items*& drop)
 {
     Utilities util;
     UI ui;
@@ -261,6 +249,11 @@ Slave::~Slave()
 {
 }
 
+Entities *Slave::Clone() const
+{
+    return new Slave(*this);
+}
+
 void Slave::TakeTurn()
 {
     this->Attack();
@@ -277,6 +270,10 @@ void Slave::Attack()
     combat.TakeDamage(this->target, this->atk);
 }
 
+Entities *Subterranean::Clone() const
+{
+    return new Subterranean(*this);
+}
 
 void Subterranean::TakeTurn()
 {
@@ -302,6 +299,10 @@ Subterranean::Subterranean()
     atk = 15;
     spd = 10;
     exp = 10;
+
+    dropTable = {
+        new IronDagger(), new RagCape()
+    };
 
     dropChance = 0.1;
 }

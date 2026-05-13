@@ -10,30 +10,9 @@ Items::~Items()
     std::cout << "아이템이 삭제되었습니다." << std::endl;
 }
 
-void Items::DisposeButton(int num)
+Items *Items::Clone() const
 {
-    std::string strnum = std::to_string(num);
-    std::cout << "["+ strnum +"] 아이템 버리기" << std::endl;
-}
-
-void Items::ToInvButton(int num)
-{
-    std::string strnum = std::to_string(num);
-    std::cout << "["+ strnum +"] 인벤토리로 돌아가기" << std::endl;
-}
-
-void Items::ShowItemMenu() //UI용 클래스 있어야겠네..
-{
-    Utilities util;
-
-    std::string line;
-    line = util.WrapColor("무엇을 하시겠습니까?", "yellow");
-    util.PrintLine(line, 2);
-    DisposeButton(1);
-    ToInvButton(2);
-    int input;
-    std::cin >> input; 
-    
+    return new Items(*this);
 }
 
 Equipments::Equipments() //친절하게도 하위 클래스들은 이 생성자를 자동 호출해준다.
@@ -63,6 +42,11 @@ IronDagger::IronDagger()
     def = 0;
 }
 
+Items *IronDagger::Clone() const
+{
+    return new IronDagger(*this);
+}
+
 RagCape::RagCape()
 {
     name = "누더기 망토";
@@ -72,5 +56,8 @@ RagCape::RagCape()
 
     atk = 0;
     def = 2;
+}
+Items *RagCape::Clone() const
+{
+    return new RagCape(*this);
 };
-

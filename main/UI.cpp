@@ -34,11 +34,17 @@ void UI::Goback(int num)
 {
     std::cout << "이전 메뉴로 돌아갑니다.\n" << std::endl;
 
-    for (int i = 0; i < num; i++) {        
+    for (int i = 0; i < num; i++) {
         UI* last = uiStack.back();
+        if (isDebug) std::cout << "found last stack" << std::endl;
+
         delete last;
+        if (isDebug) std::cout << "deleted last stack" << std::endl;
+
         uiStack.pop_back();
+        if (isDebug) std::cout << "popped stack" << std::endl;
     }
+
 
     if (uiStack.empty()) { //스택이 비면 return 한다.
         std::cout << "ui 스택이 비었는뎁쇼?" << std::endl;
@@ -89,6 +95,45 @@ InvUI::InvUI(Player *p)
     player = p;
 }
 
+
+
+void InvUI::Show()
+{
+    Utilities util;
+
+    this->Stack();
+
+    if (player->inventory.empty()) {
+        std::cout << "인벤토리가 비었습니다." << std::endl;
+        Goback();
+    }
+
+    std::cout << "\033[2J\033[H";
+
+    std::string line = player->name + "의 인벤토리\n";
+    line = util.WrapColor(line, "yellow");
+    util.PrintLine(line, 0);
+    std::cout << "아이템 개수:"; std::cout << player->inventory.size() << std::endl;
+    util.NewLine(1);
+
+    int i = 1;
+    for (Items* item : player->inventory) {
+        std::string itemname = util.WrapColor(item->name, item->nameColor);
+        std::string num = std::to_string(i);
+        line = "[" + num + "]" + itemname;
+        std::cout << line << std::endl;
+        i += 1;
+    }
+    util.NewLine(1);
+    util.PrintLine("숫자를 입력하여 선택하십시오.", 2);
+    int intinput;
+    std::cin >> intinput;
+    util.NewLine(1);
+    Items* curItem = player->inventory[intinput-1];
+    ItemUI* itemui = new ItemUI(curItem);
+    itemui->Show();
+}
+
 void ItemUI::Show()
 {
 
@@ -108,36 +153,6 @@ void ItemUI::Show()
         default:
             std::cout << "아이템 타입을 가져오지 못함." << std::endl;
     }
-}
-
-void InvUI::Show()
-{
-    Utilities util;
-
-    this->Stack();
-
-    std::string line = player->name + "의 인벤토리\n아이템 개수: ";
-    line = util.WrapColor(line, "yellow");
-    util.PrintLine(line, 0);
-    std::cout << player->inventory.size() << std::endl;
-    util.NewLine(1);
-
-    int i = 1;
-    for (Items* item : player->inventory) {
-        std::string itemname = util.WrapColor(item->name, item->nameColor);
-        std::string num = std::to_string(i);
-        line = "[" + num + "]" + itemname;
-        std::cout << line << std::endl;
-        i += 1;
-    }
-    util.NewLine(1);
-    util.PrintLine("숫자를 입력하여 선택하십시오.", 2);
-    int intinput;
-    std::cin >> intinput;
-    util.NewLine(1);
-    Items* curItem = player->inventory[intinput-1];
-    ItemUI* itemui = new ItemUI(curItem);
-    itemui->Show();
 }
 
 void ItemUI::ShowItem() {

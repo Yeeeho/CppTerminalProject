@@ -24,7 +24,6 @@ class Room {
 class Map {
     private:
     Player* player;
-
     public:
     
     std::vector<Room*> rooms;

@@ -41,7 +41,7 @@ class Entities : public GameObject {
     virtual void Attack();
     virtual void TakeTurn();
     virtual void Dead(); 
-    Entities Clone();
+    virtual Entities* Clone() const; //객체가 const 일때도 불변성 보장하고 실행시킴.
 };
 
 //널포인터 대신에 쓸수 있는 널 객체용 클래스다.
@@ -68,13 +68,11 @@ class Player : public Entities {
     void TakeTurn() override;
     void Dead() override;
     void ShowMenu();
-    void LootItem(Items* drop);
+    void LootItem(Items*& drop);
 };
 
 class Enemies : public Entities {
     public:
-
-    std::vector<Enemies*> ENEMY_POOL;
 
     Enemies() = default;
     ~Enemies() = default;
@@ -82,6 +80,9 @@ class Enemies : public Entities {
 
 class Slave : public Enemies {
     private:
+
+    Entities* Clone() const override;
+    
     void TakeTurn() override;
     void Attack() override;
     
@@ -92,6 +93,9 @@ class Slave : public Enemies {
 
 class Subterranean : public Enemies {
     private:
+
+    Entities* Clone() const override;
+
     void TakeTurn() override;
     void Attack() override;
 

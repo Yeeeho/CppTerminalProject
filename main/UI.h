@@ -10,7 +10,7 @@ class UI; //전방 선언
 class UI : public GameSystem {
     public:
     
-    static const bool isDebug = false; //디버깅용 정적변수다.
+    static const bool isDebug = true; //디버깅용 정적변수다.
  
     static std::vector<UI*> uiStack; //정적 UI 스택
     bool isStacked = false;

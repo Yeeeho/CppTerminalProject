@@ -22,9 +22,7 @@ class Items : public GameObject {
 
     ~Items();
 
-    void DisposeButton(int num);
-    void ToInvButton(int num);
-    virtual void ShowItemMenu();
+    virtual Items* Clone() const;
 };
 
 class Equipments : public Items {
@@ -60,10 +58,12 @@ class IronDagger : public Weapons {
 
     public:
     IronDagger();
+    Items* Clone() const override;
 };
 
 class RagCape : public BackGears {
 
     public:
     RagCape();
+    Items* Clone() const override;
 };
