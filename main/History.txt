@@ -77,10 +77,109 @@ UI분리 문제..
 - 되도록이면 아키텍처 레벨에서 순환 참조 문제가 생기지 않게 만드는게 속 편하노..
 
 UI 스택을 곧바로 삭제해부럿더니..
-- UI 객체의 함수 내부에 자기 자신(UI)를 스택에 push 하거나 pop 하는 goback 함수를 만들었다.
-- 문제는 자기 자신을 뺄때였다. 힙메모리에 올라가있으니 delete로 마지막 스택에 있는 것을 빼주었는데
+- UI 객체의 함수 내부에 자기 자신(UI)를 new Class() 형태로 만들어 스택에 push 하거나 pop 하는 goback 함수를 만들었다.
+- 문제는 자기 자신을 뺄때였다.  delete로 마지막 스택에 있는 것을 빼주었는데
 - goback 함수를 실행하는 객체 자신을 삭제해버린 것이다.. 그래서 크래시가 난거고
-- 지연 삭제 로직을 만들어서 함수가 다 실행된 다음에 객체들을 일괄 삭제하는 방식을 시도해보기로 했다.
+- delete this 덕분에 즐거운 버그도 생기고.
+
+문제의 똥코드다.
+
+void InvUI::Show()
+{
+    Utilities util;
+
+    this->Stack();
+
+    //...인벤토리 보여주는 코드
+
+    Items* curItem = player->inventory[intinput-1];
+    ItemUI* itemui = new ItemUI(curItem);
+    itemui->Show(); //이런 식으로 UI함수 내부에서 또다른 UI함수를 불러내서 의존성이 높다.
+}
+
+
+void UI::Goback(int num)
+{
+    std::cout << "이전 메뉴로 돌아갑니다.\n" << std::endl;
+
+    for (int i = 0; i < num; i++) {
+        UI* last = uiStack.back();
+        if (isDebug) std::cout << "found last stack" << std::endl;
+
+        delete last; <<< 이놈이 문제였다. 이놈때문에 자기자신을 삭제해놓고 메서드를 실행한거다.
+        if (isDebug) std::cout << "deleted last stack" << std::endl;
+
+        uiStack.pop_back();
+        if (isDebug) std::cout << "popped stack" << std::endl;
+    }
+
+    if (uiStack.empty()) { //스택이 비면 return 한다.
+        std::cout << "ui 스택이 비었는뎁쇼?" << std::endl;
+        return;
+    } 
+
+    UI* prev = uiStack.back();
+    prev->Show();
+}
+
+UI출력 함수 내부에서 또다른 UI함수를 출력하는 방식이었기 때문에 애초에 의존성이 너무 높았다.
+따라서 메인에서 while 루프 내에 현재 상태를 보여주고 반복하는 구조가 더 적합한 거 같기도하고..
+이것을 state machine 이라고 부른다. 참고자료: https://underflow101.tistory.com/55
+
+- 상태 객체가 모든 UI들을 관리하기 때문에
+- UI 객체 내부에서 static으로 선언했던 uistack을 UIState 객체 내부에 nonstatic으로 구현할수 있었다.
+
+//이전 스택
+class UI : public GameSystem {
+    public:
+    static vector<UI*> uiStack;
+    //... 다른 멤버들
+};
+
+//현재 스택
+class UIState { //state machine pattern 용 객체, 무조건 스택에만 인스턴스 생성.
+    public:
+    std::vector<UI*> uiStack; //스테이트 객체가 관리하는 UI 스택
+    UI* currentUI;
+};
+
+//UI 클래스의 현재 모습.
+class UI : public GameSystem {
+    public:
+    
+    //상태 제어용 변수
+    bool isForDelete = false; //삭제할 예정인가?
+    bool isEnd = false; //UI 루프를 탈출하기 위한 플래그 변수.
+    bool isBack = false; //UI 루프에서 뒤로 가기 위한 플래그 변수.
+
+    virtual UI* Show(); // UI를 출력하고 다음에 사용할 UI 객체를 반환한다.
+    virtual UI* Clone() const; //공변 반환을 위한 가상함수.
+
+    bool YesOrNo(); //예, 아니오를 물어보는 함수.
+};
+
+void UIManager::Run() //메인 루프임.
+{
+    while (true) {
+        //초기 currentUI가 할당된 상태임.
+        Stack();
+        
+        if (isDebug) std::cout << "stack succeed" << std::endl;
+
+        currentUI = currentUI->Show(); //함수에서 함수를 호출하는 게 아니라 새로운 ui 객체를 리턴하게 만듬.
+        if (currentUI->isEnd) {
+            if (isDebug) std::cout << "UI loop ended" << std::endl;
+            break;
+        }
+
+        else if (currentUI->isBack) {
+            if (isDebug) std::cout << "going back" << std::endl;
+            currentUI = Goback();
+        }
+    }
+}
+
+- 지연 삭제 로직을 만들어서 함수가 다 실행된 다음에 객체들을 일괄 삭제하는 방식을 시도해보기로 했다.(글쎄..)
 
 5. 랜덤 엔진 객체와 랜덤 배포 객체는 static이어야 반복됐을때 다른 랜덤 값을 생성함
 
@@ -96,3 +195,5 @@ UI PlayerUI::GetType() {
 - enum class 에서 엔티티의 타입을 열거해주고 조건문으로 타입과 일치하면 형변환 (Type) Type Object
 - 처음에 시도한 방법이나, 코딩할게 늘어나더라.
  
+ 함수에 리턴값이 있으면 혹시 리턴된 값을 제대로 쓰고 있는지 확인해보자
+ 제발!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

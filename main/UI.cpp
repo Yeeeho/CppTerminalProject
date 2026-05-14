@@ -1,58 +1,19 @@
 #include <iostream>
+#include <cctype>
 
 #include "UI.h"
 #include "Utils.h"
 #include "Items.h"
 
-
-std::vector<UI*> UI::uiStack = {};
-
-void UI::Show()
+UI* UI::Show()
 {
+    std::cout << "default UI instance created, not good." << std::endl;
+    return new UI();
 }
 
-void UI::Stack()
+UI *UI::Clone() const
 {
-    if (isDebug) {
-
-        std::cout << "is this stacked: ";
-        std::cout << this->isStacked << std::endl;
-    }
-
-    if (!this->isStacked) {
-        this->isStacked = true;
-        uiStack.push_back(this);
-    }
-
-    if (isDebug) {        
-        std::cout << "current ui stack size:";
-        std::cout << uiStack.size() << std::endl;
-    }
-}
-
-void UI::Goback(int num)
-{
-    std::cout << "이전 메뉴로 돌아갑니다.\n" << std::endl;
-
-    for (int i = 0; i < num; i++) {
-        UI* last = uiStack.back();
-        if (isDebug) std::cout << "found last stack" << std::endl;
-
-        delete last;
-        if (isDebug) std::cout << "deleted last stack" << std::endl;
-
-        uiStack.pop_back();
-        if (isDebug) std::cout << "popped stack" << std::endl;
-    }
-
-
-    if (uiStack.empty()) { //스택이 비면 return 한다.
-        std::cout << "ui 스택이 비었는뎁쇼?" << std::endl;
-        return;
-    } 
-
-    UI* prev = uiStack.back();
-    prev->Show();
+    return new UI(*this);
 }
 
 bool UI::YesOrNo()
@@ -81,6 +42,83 @@ bool UI::YesOrNo()
     }
 }
 
+
+UIManager::UIManager(UI *initUI)
+{
+    currentUI = initUI;
+}
+
+void UIManager::Run()
+{
+    while (true) {
+        //초기 currentUI가 할당된 상태임.
+        if (currentUI->isEnd) {
+            break;
+        }
+
+        Stack();
+        
+        if (isDebug) std::cout << "stack succeed" << std::endl;
+
+        currentUI = currentUI->Show();
+
+        if (currentUI->isBack) {
+            if (isDebug) std::cout << "going back" << std::endl;
+            currentUI = Goback();
+        }
+    }
+
+    if (isDebug) std::cout << "UI loop ended" << std::endl;
+}
+
+void UIManager::Stack()
+{
+    if (!currentUI->isStacked) {
+        currentUI->isStacked = true;
+        uiStack.push_back(currentUI);
+    }
+
+    if (isDebug) {        
+        std::cout << "current ui stack size:";
+        std::cout << uiStack.size() << std::endl;
+    }
+}
+
+UI* UIManager::Goback()
+{
+    Utilities util;
+    util.PrintLine("이전 메뉴로 돌아갑니다.");
+    
+    UI* last = uiStack.back();
+    if (isDebug) std::cout << "found last stack" << std::endl;
+
+    delete last;
+    if (isDebug) std::cout << "stacked on delete stack" << std::endl;
+
+    uiStack.pop_back();
+    last = nullptr;
+    if (isDebug) std::cout << "popped stack" << std::endl;
+    
+    if (uiStack.empty()) { //스택이 비면 return 한다.
+        std::cout << "UI stack empty" << std::endl;
+        if (isDebug) util.LoadingLine("", 1);
+        return new UIState("end");
+    } 
+
+    UI* prev = uiStack.back();
+    return prev;
+}
+
+UIState::UIState(std::string state)
+{
+    Utilities util;
+
+    if (state == "end")
+        isEnd = true;
+    else if (state == "back") isBack = true;
+    else util.PrintLine("uistate: not viable parameter");
+}
+
 ItemUI::ItemUI(Items* it) { 
     player = (Player*) GameSystem::player;
     item = it;
@@ -95,17 +133,13 @@ InvUI::InvUI(Player *p)
     player = p;
 }
 
-
-
-void InvUI::Show()
+UI* InvUI::Show()
 {
     Utilities util;
 
-    this->Stack();
-
     if (player->inventory.empty()) {
         std::cout << "인벤토리가 비었습니다." << std::endl;
-        Goback();
+        return new UIState("back");
     }
 
     std::cout << "\033[2J\033[H";
@@ -125,74 +159,47 @@ void InvUI::Show()
         i += 1;
     }
     util.NewLine(1);
-    util.PrintLine("숫자를 입력하여 선택하십시오.", 2);
-    int intinput;
-    std::cin >> intinput;
-    util.NewLine(1);
-    Items* curItem = player->inventory[intinput-1];
-    ItemUI* itemui = new ItemUI(curItem);
-    itemui->Show();
-}
+    std::cout << util.WrapColor("숫자를 입력하여 선택하십시오.", "yellow") << std::endl;
+    std::cout << "돌아가기 위해선 q 키를 누르십시오." << std::endl;
 
-void ItemUI::Show()
-{
-
-    std::cout << "아이템 메뉴" << std::endl;
-
-    Utilities util;
-
-    this->Stack();
-
-    switch(item->type) {
-        case ItemType::Item:
-            ShowItem();
-            break;
-        case ItemType::Equipment:
-            ShowEq();
-            break;
-        default:
-            std::cout << "아이템 타입을 가져오지 못함." << std::endl;
-    }
-}
-
-void ItemUI::ShowItem() {
-    Utilities util;
-
-    ShowName();
-    ShowDesc();
-    ShowVal();
-    std::string line;
-    line = util.WrapColor("무엇을 하시겠습니까?", "yellow");
-    util.PrintLine(line, 2);
-    DisPoseButton(1);
-    GobackButton(2);
-    int input;
+    int itindex;
     while (true) {
-        std:: cin >> input;
-        util.NewLine(1);
-        switch(input) {
-            case 1:
-                new DisPoseUI(item);
-                break;
-            case 2:
-                Goback();
-                break;
-            default:
-                std::cout << "다시 입력해 주십시오" << std::endl;
+
+        std::string input;
+        std::cin >> input;
+        if (isdigit(input[0])) {
+            int intinput = std::stoi(input);
+            std::cout << "user input:" << intinput << std::endl;
+            itindex = intinput;
+            break;
+        }
+    else {
+        int intinput = (int) input[0];
+        std::cout << "user input:" << intinput << std::endl;
+        if (intinput == 113) return new UIState("back");
+        else std::cout << "다시 입력해 주십시오" << std::endl;
         }
     }
+    util.NewLine(1);
+
+    Items* curItem = player->inventory[itindex-1];
+    ItemUI* itemui = new ItemUI(curItem);
+    return itemui;
 }
 
-void ItemUI::ShowEq()
+UI *InvUI::Clone() const
 {
+    return new InvUI(*this);
+}
+
+UI* ItemUI::Show()
+{
+    if (isDebug) std::cout << "showing item menu" << std::endl;
+
     Utilities util;
 
-    ShowName();
-    ShowDesc();
-    ShowAtk();
-    ShowDef();
-    std::cout << std::endl;
-    ShowVal();
+    ShowInfo();
+
     std::string line = util.WrapColor("무엇을 하시겠습니까?", "yellow");
     util.PrintLine(line, 2);
     DisPoseButton(1);
@@ -202,17 +209,32 @@ void ItemUI::ShowEq()
     while (true) {
         std:: cin >> input;
         util.NewLine(1);
-        switch(input) {
-            case 1:
-                (new DisPoseUI(item))->Show();
-                break;
-            case 2:
-                Goback();
-                break;
-            default:
+        if (input == 1) {
+                return new DisPoseUI(item);
+        }
+        else if (input == 2) {
+                UIState* uis = new UIState("back");
+                return uis;
+        }
+        else {
                 std::cout << "다시 입력해 주십시오" << std::endl;
         }
     }
+}
+
+UI *ItemUI::Clone() const
+{
+    return new ItemUI(*this);
+}
+
+void ItemUI::ShowInfo()
+{
+    ShowName();
+    ShowDesc();
+    ShowAtk();
+    ShowDef();
+    std::cout << std::endl;
+    ShowVal();
 }
 
 void ItemUI::ShowName()
@@ -264,11 +286,9 @@ void ItemUI::ShowDef()
     std::cout << "방어력: " + itemval  << std::endl;
 }
 
-void DisPoseUI::Show()
+UI* DisPoseUI::Show()
 {
     Utilities util;
-
-    this->Stack();
 
     util.NewLine(1);
     std::cout << "아이템을 정말 버리시겠습니까? 다시 획득할수 없어요." << std::endl;
@@ -276,14 +296,20 @@ void DisPoseUI::Show()
         delete item;
         util.EraseOneElem(player->inventory, item);
         item = nullptr;
-        Goback(2);
+        return new UIState("back");
     }
     else {
-        Goback();
+        return new UIState("back");
     }
+}
+
+UI *DisPoseUI::Clone() const
+{
+    return new DisPoseUI(*this);
 }
 
 DisPoseUI::DisPoseUI(Items* it)
 {
     item = it;
 }
+

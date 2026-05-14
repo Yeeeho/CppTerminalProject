@@ -25,18 +25,15 @@ void Scenario::DebugScene()
 
     // player->inventory.push_back(new IronDagger());
     // player->inventory.push_back(new IronDagger());
-    // player->inventory.push_back(new IronDagger());
-    // std::cout << player->inventory.size() << std::endl;
-    // InvUI *inv = new InvUI(player);
-    // inv->Show();
+    // UIManager(new InvUI(player)).Run();   
 
-    // Combat combat = Combat(player);
-    // Slave* slv = new Slave();
-    // combat.Loop(slv);
+    Combat combat = Combat(player);
+    Slave* slv = new Slave();
+    combat.Loop(slv);
 
-    Map map = Map(30);
-    map.RandomRooms();
-    map.Progress();
+    // Map map = Map(30);
+    // map.RandomRooms();
+    // map.Progress();
 
     std::cout << "debug scene ended\n";
 }

@@ -184,7 +184,8 @@ void Player::ShowMenu()
         }
         //아이템 사용
         else if (input == "4") {
-            InvUI(this).Show();
+            std::cout << "아이템을 사용한다." << std::endl;
+            UIManager(new InvUI(this)).Run();
             break;
         }
 
