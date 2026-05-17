@@ -14,7 +14,9 @@ void DebugLoop() {
 }
 
 int main() {
-    
+    GameSystem sys;
+    sys.Load();
+
     system("");
     DebugLoop();
     

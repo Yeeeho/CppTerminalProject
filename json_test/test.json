@@ -1,0 +1,15 @@
+{
+    "type" : "item",
+    "items" : {
+        "default_item" : {
+            "id" : 1,
+            "value" : 10
+        },
+        
+        "babo" : {
+        "id" : 2,
+        "value" : 2
+        }
+    } 
+    
+}

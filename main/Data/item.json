@@ -1,0 +1,22 @@
+{
+    "type" : "item",
+    "items" : {
+        "iron_dagger" : {
+            "name" : "쇠 단검",
+            "nameColor" : "default",
+            "desc" : "",
+            "value" : 10,
+
+            "atk" : 5
+        },
+
+        "rag_cloak" : {
+            "name" : "누더기 망토",
+            "nameColor" : "default",
+            "desc" : "",
+            "value" : 10,
+
+            "def" : 2
+        }
+    }
+}
