@@ -3,7 +3,6 @@
 #include <vector>
 
 #include "Entities.h"
-#include "Items.h"
 
 class Room {
     private:

@@ -5,9 +5,9 @@
 #include "UI.h"
 #include "Scenes.h"
 #include "Entities.h"
-#include "Items.h"
 #include "Combat.h"
 #include "Map.h"
+#include "item.h"
 #include "DataPool.h"
 
 Scenario::Scenario()
@@ -24,9 +24,9 @@ void Scenario::DebugScene()
     std::cout << "debugging scene\n";
 
 
-    // player->inventory.push_back(new IronDagger());
-    // player->inventory.push_back(new IronDagger());
-    // UIManager(new InvUI(player)).Run();   
+    player->inventory.push_back(new Item("iron_dagger"));
+    player->inventory.push_back(new Item("iron_dagger"));
+    UIManager(new InvUI(player)).Run();   
 
     // Combat combat = Combat(player);
     // Slave* slv = new Slave();

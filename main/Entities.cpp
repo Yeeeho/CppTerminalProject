@@ -6,7 +6,7 @@
 #include "Entities.h"
 #include "Effects.h"
 #include "Combat.h"
-#include "Items.h"
+#include "item.h"
 #include "Utils.h"
 #include "UI.h"
 
@@ -81,7 +81,7 @@ void Entities::Dead()
     //플레이어가 아이템을 획득한다.
     std::string input;
     int itemIdx = itemRand(dre);
-    Items* drop = this->dropTable[itemIdx]->Clone();
+    Item* drop = this->dropTable[itemIdx];
     player->LootItem(drop);
 
     delete this;
@@ -193,7 +193,7 @@ void Player::ShowMenu()
     }
 }
 
-void Player::LootItem(Items*& drop)
+void Player::LootItem(Item*& drop)
 {
     Utilities util;
     UI ui;
@@ -241,7 +241,7 @@ Slave::Slave()
     exp = 5;
 
     dropTable = {
-        new IronDagger(), new RagCape()
+        new Item("iron_dagger"), new Item("rag_cloak")
     };
     dropChance = 0.3;
 }
@@ -302,7 +302,7 @@ Subterranean::Subterranean()
     exp = 10;
 
     dropTable = {
-        new IronDagger(), new RagCape()
+        new Item("iron_dagger")
     };
 
     dropChance = 0.1;

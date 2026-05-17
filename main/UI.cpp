@@ -3,7 +3,6 @@
 
 #include "UI.h"
 #include "Utils.h"
-#include "Items.h"
 
 UI* UI::Show()
 {
@@ -119,7 +118,7 @@ UIState::UIState(std::string state)
     else util.PrintLine("uistate: not viable parameter");
 }
 
-ItemUI::ItemUI(Items* it) { 
+ItemUI::ItemUI(Item* it) { 
     player = (Player*) GameSystem::player;
     item = it;
 }
@@ -151,7 +150,7 @@ UI* InvUI::Show()
     util.NewLine(1);
 
     int i = 1;
-    for (Items* item : player->inventory) {
+    for (Item* item : player->inventory) {
         std::string itemname = util.WrapColor(item->name, item->nameColor);
         std::string num = std::to_string(i);
         line = "[" + num + "]" + itemname;
@@ -182,7 +181,7 @@ UI* InvUI::Show()
     }
     util.NewLine(1);
 
-    Items* curItem = player->inventory[itindex-1];
+    Item* curItem = player->inventory[itindex-1];
     ItemUI* itemui = new ItemUI(curItem);
     return itemui;
 }
@@ -270,19 +269,17 @@ void ItemUI::GobackButton(int num)
 
 void ItemUI::ShowAtk()
 {
-    Equipments* eq = (Equipments*) item;
-    if (eq->atk == 0) return;
+    if (item->atk == 0) return;
     
-    std::string itemval = std::to_string(eq->atk);
+    std::string itemval = std::to_string(item->atk);
     std::cout << "공격력: " + itemval << std::endl;
 }
 
 void ItemUI::ShowDef()
 {
-    Equipments* eq = (Equipments*) item;
-    if (eq->def == 0) return;
+    if (item->def == 0) return;
     
-    std::string itemval = std::to_string(eq->def);
+    std::string itemval = std::to_string(item->def);
     std::cout << "방어력: " + itemval  << std::endl;
 }
 
@@ -308,7 +305,7 @@ UI *DisPoseUI::Clone() const
     return new DisPoseUI(*this);
 }
 
-DisPoseUI::DisPoseUI(Items* it)
+DisPoseUI::DisPoseUI(Item* it)
 {
     item = it;
 }

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Entities.h"
-#include "Items.h"
 #include "Events.h"
 
 class Events;
@@ -13,10 +12,6 @@ class DataPool {
 
     const std::vector<Enemies*> ENEMY_POOL = {
         new Slave(), new Subterranean()
-    };
-
-    const std::vector<Equipments*> EQUIP_POOL = {
-        new IronDagger(), new RagCape()
     };
 
     //함수 포인터 배열, 연습용

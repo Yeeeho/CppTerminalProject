@@ -1,0 +1,80 @@
+cpp클래스 구조를 이용해서 데이터를 저장하려고 했으나, 데이터와 소스코드를 분리하기 위해
+json으로 데이터만 분리하기로 했다.
+
+
+class IronDagger : public Weapons {
+
+    public:
+    IronDagger();
+    Items* Clone() const override;
+};
+
+class RagCape : public BackGears {
+
+    public:
+    RagCape();
+    Items* Clone() const override;
+};
+
+이런식으로 클래스 내부에 데이터들을 저장하려다보니, 나중에 파일 규모가 이 구조 그대로
+커진다면 컴파일 시간이 크게 늘어날 것이라 예상했다. 
+
+그래서 json데이터베이스를 만들고, 소스코드에서 불러오도록 했다.
+
+{
+    "type" : "item",
+    "items" : {
+        "iron_dagger" : {
+            "name" : "쇠 단검",
+            "nameColor" : "default",
+            "desc" : "",
+            "value" : 10,
+
+            "atk" : 5
+        },
+
+        "rag_cloak" : {
+            "name" : "누더기 망토",
+            "nameColor" : "default",
+            "desc" : "",
+            "value" : 10,
+
+            "def" : 2
+        }
+    }
+}
+
+이런 식으로 키값을 통해 json 객체에 접근할 수 있게 만들었고,
+
+struct Item {
+    const bool isDebug = false;
+
+    std::string type;
+    std::string name;
+    std::string nameColor;
+    std::string desc;
+    int value;
+    
+    int atk;
+    int def;
+    
+    Item(std::string name) {
+        std::cout << "Item instantiate" << std::endl;
+
+        if (itemPool == nullptr) std::cout << "nullptr pool" << std::endl;
+
+        const json& item = (*itemPool)["items"][name];
+
+        this->type = (*itemPool)["type"].get<std::string>();
+        this->name = item["name"].get<std::string>();
+        this->nameColor = item["nameColor"].get<std::string>();
+        this->desc = item["desc"].get<std::string>();
+        //여기까지는 필수정보임
+        //이 밑으로는 타입에 따라서 가지고 있지 않을수도 있음.
+
+        if (item.contains("atk")) this->atk = item["atk"].get<int>();
+        if (item.contains("def")) this->def = item["def"].get<int>();
+    }
+};
+
+구조체와 그 생성자를 통해 json 객체에 접근하여 아이템 정보를 받아오게 했다.

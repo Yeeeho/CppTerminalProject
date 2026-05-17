@@ -5,10 +5,10 @@
 
 #include "System.h"
 #include "Effects.h"
-#include "Items.h"
+#include "item.h"
 
 class Effects;
-class Items;
+class Item;
 class Equipments;
 
 class Entities : public GameObject {
@@ -22,7 +22,7 @@ class Entities : public GameObject {
 
     //벡터 타입은 복사될때 알아서 새로운 메모리를 할당받더라
     std::vector<Effects*> effects; 
-    std::vector<Items*> dropTable;
+    std::vector<Item*> dropTable;
     float dropChance;
 
     int hp;
@@ -56,7 +56,7 @@ class Player : public Entities {
     
     public:
 
-    std::vector<Items*> inventory;
+    std::vector<Item*> inventory;
     int invSize;
 
     std::vector<Equipments*> wornGears;
@@ -68,7 +68,7 @@ class Player : public Entities {
     void TakeTurn() override;
     void Dead() override;
     void ShowMenu();
-    void LootItem(Items*& drop);
+    void LootItem(Item*& drop);
 };
 
 class Enemies : public Entities {

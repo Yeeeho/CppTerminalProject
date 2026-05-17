@@ -3,7 +3,6 @@
 #include <vector>
 
 #include "Entities.h"
-#include "Items.h"
 
 class UI; //전방 선언
 
@@ -64,10 +63,10 @@ class InvUI: public PlayerUI {
 class ItemUI : public PlayerUI {
     private:
     public:
-    Items* item;
+    Item* item;
 
     ItemUI() = default;
-    ItemUI(Items*);
+    ItemUI(Item*);
 
     UI* Show() override; //아이템 정보를 출력함.
     UI* Clone() const override;
@@ -92,7 +91,7 @@ class DisPoseUI : public ItemUI {
     UI* Show() override;
     UI* Clone() const override;
 
-    DisPoseUI(Items*);
+    DisPoseUI(Item*);
 };
 
 
