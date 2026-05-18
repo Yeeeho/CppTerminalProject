@@ -2,8 +2,6 @@
 
 #include <string>
 
-#include "DataPool.h"
-
 class DataPool;
 
 class Events {

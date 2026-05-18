@@ -2,12 +2,12 @@
 #include <vector>
 #include <random>
 
+#include "json.hpp"
 #include "System.h"
 #include "Combat.h"
 #include "Map.h"
 #include "Entities.h"
 #include "Events.h"
-#include "DataPool.h"
 
 static bool isDebug = true;
 
@@ -38,11 +38,12 @@ Map::~Map()
 void Map::RandomRooms()
 {
     Events ev;
-    DataPool pool;
+
+    json currentPool = encounterPool["items"]["underground"]; //여기 하드코딩해놓음
 
     static std::default_random_engine dre;
     static std::bernoulli_distribution EnemyProb(0.7);
-    static std::uniform_int_distribution<int> EnemyRand(0, pool.ENEMY_POOL.size() - 1);
+    static std::uniform_int_distribution<int> EnemyRand(0, currentPool.size()-1);
     static std::uniform_int_distribution<int> EventRand(0, 1);
 
     for (auto room : this->rooms) {
@@ -56,7 +57,7 @@ void Map::RandomRooms()
 
         if (room->isEnemy) {
             room->enemyIdx = EnemyRand(dre);
-            room->enemy = (*pool.ENEMY_POOL[room->enemyIdx]).Clone();
+            room->enemy = new Entities((currentPool[room->enemyIdx]));
         }
         if (room->isEvent) {
             room->eventIdx = EventRand(dre);
@@ -66,7 +67,6 @@ void Map::RandomRooms()
 
 void Map::Progress()
 {
-    DataPool pool;
     Events ev;
 
     for (auto room : this->rooms) {
@@ -83,8 +83,7 @@ void Map::Progress()
                 std::string eventIdx = std::to_string(room->eventIdx);
                 std::cout << "event idx" + eventIdx + "\n";
             }
-            auto pf = pool.EVENT_TABLE[room->eventIdx];
-            (ev.*pf)();
+            std::cout << "event feature is not updated" << std::endl;
         }
         else {
             std::cout << "if you see this there is something wrong\n";

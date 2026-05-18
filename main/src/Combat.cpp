@@ -134,7 +134,7 @@ void Combat::Loop(Entities* enemy)
 
         curEntity->TakeTurn();
 
-        if (!curEntity->effects.empty()) {
+        if (!curEntity->effects.empty()) { //일정 턴동안 지속되는 효과
             for (auto effect : curEntity->effects) {
                 if (effect->lastTurn > 0) {
                     effect->lastTurn -= 1;

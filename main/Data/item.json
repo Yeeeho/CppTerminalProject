@@ -1,6 +1,15 @@
 {
     "type" : "item",
     "items" : {
+
+        "default" : {
+            "name" : "default_item",
+            "nameColor" : "default",
+            "desc" : "this is default item",
+
+            "value" : 10
+        },
+
         "iron_dagger" : {
             "name" : "쇠 단검",
             "nameColor" : "default",

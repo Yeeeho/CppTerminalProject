@@ -4,7 +4,10 @@
 
 using json = nlohmann::json;
 
-extern json* itemPool;
+extern json itemPool;
+extern json entityPool;
+extern json encounterPool;
+
 
 class Player;
 
@@ -16,6 +19,7 @@ class GameSystem {
     static GameSystem *player;
 
     void Load();
+    void LoadJsonFile(json& j, std::string path);
 };
 
 class GameObject : public GameSystem {

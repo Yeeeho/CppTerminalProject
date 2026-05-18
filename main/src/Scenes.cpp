@@ -8,7 +8,6 @@
 #include "Combat.h"
 #include "Map.h"
 #include "item.h"
-#include "DataPool.h"
 
 Scenario::Scenario()
 {
@@ -24,13 +23,13 @@ void Scenario::DebugScene()
     std::cout << "debugging scene\n";
 
 
-    player->inventory.push_back(new Item("iron_dagger"));
-    player->inventory.push_back(new Item("iron_dagger"));
-    UIManager(new InvUI(player)).Run();   
+    // player->inventory.push_back(new Item("iron_dagger"));
+    // player->inventory.push_back(new Item("iron_dagger"));
+    // UIManager(new InvUI(player)).Run();   
 
-    // Combat combat = Combat(player);
-    // Slave* slv = new Slave();
-    // combat.Loop(slv);
+    Combat combat = Combat(player);
+    Entities* slv = new Entities("slave");
+    combat.Loop(slv);
 
     // Map map = Map(30);
     // map.RandomRooms();
@@ -257,6 +256,6 @@ void Scenario::Intro1()
     util.TerminalColor();
 
     Combat combat = Combat(player);
-    Slave* slv = new Slave();
+    Entities* slv = new Entities("slave");
     combat.Loop(slv);
 }

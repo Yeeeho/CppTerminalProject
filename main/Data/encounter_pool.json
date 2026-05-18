@@ -1,0 +1,14 @@
+{
+    "type" : "enemy_pool",
+    "items" : {
+        
+        "default" : [
+            "default"
+        ],
+        
+        "underground" : [
+            "slave", "subterran"
+        ]
+    }
+
+}

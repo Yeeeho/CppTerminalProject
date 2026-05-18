@@ -1,0 +1,61 @@
+{
+    "type" : "entity",
+    "items" : {
+
+        "default" : {
+            "race" : "default_race",
+            "name" : "default_name",
+            "nameColor" : "default",
+            "desc" : "this is default entity",
+
+            "ai_type" : "default",
+
+            "hp" : 1,
+            "atk" : 1,
+            "spd" : 1,
+            "exp" : 1
+        },
+
+        "slave" : {
+            "race" : "roboflesh",
+            "name" : "노예",
+            "nameColor" : "red",
+            "desc" : "이 친구는 말라비틀어진 사람의 몸에 전자부품이 덕지덕지 붙은 머리를 하고 있습니다.\n힘없이 움직이는 모습이 자기 의지로 움직이는 것 같진 않군요.\n",
+
+            "ai_type" : "slave",
+
+            "hp" : 10,
+            "atk" : 10,
+            "spd" : 5,
+            "exp" : 5
+        },
+
+        "subterran" : {
+            "race" : "subterran",
+            "name" : "지하인",
+            "nameColor" : "red",
+            "desc" : "이 인간과 매우 흡사한 존재는 어둠에 적응한 것인지 눈이 있어야 할 부분이 움푹 패여 있기만 합니다.\n왜인진 모르겠지만 손톱이 매우 날카롭게 발달했군요.\n",
+
+            "ai_type" : "subterran",
+
+            "hp" : 40,
+            "atk" : 20,
+            "spd" : 10,
+            "exp" : 10
+        },
+
+        "rat" : {
+            "race" : "beast",
+            "name" : "쥐",
+            "nameColor" : "red",
+            "desc" : "개만한 쥐입니다.\n아주 빠르게 움직입니다.\n",
+
+            "ai_type" : "rat",
+
+            "hp" : 10,
+            "atk" : 10,
+            "spd" : 20,
+            "exp" : 10
+        }
+    }
+}

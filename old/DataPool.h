@@ -10,8 +10,8 @@ class DataPool {
     public:
     DataPool();
 
-    const std::vector<Enemies*> ENEMY_POOL = {
-        new Slave(), new Subterranean()
+    const std::vector<Entities*> ENEMY_POOL = {
+        new Entities("slave"), new Entities("subterran")
     };
 
     //함수 포인터 배열, 연습용

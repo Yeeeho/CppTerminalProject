@@ -33,4 +33,6 @@ int main() {
     std::cout << it.type << std::endl;
     std::cout << it.id << std::endl;
     std::cout << it.value << std::endl;
+
+    std::cout << "size: " << jitem["object"].size();
 }

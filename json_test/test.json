@@ -10,6 +10,15 @@
         "id" : 2,
         "value" : 2
         }
-    } 
+    },
+
+    "list" : [
+        "item1", "item2"
+    ],
+
+    "object" : {
+        "a" : "val",
+        "b" : "val"
+    }
     
 }
