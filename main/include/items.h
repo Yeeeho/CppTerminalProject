@@ -4,8 +4,7 @@
 #include <vector>
 #include <fstream>
 
-#include "System.h"
-#include "Utils.h"
+#include "system.h"
 
 struct Item {
     const bool isDebug = false;

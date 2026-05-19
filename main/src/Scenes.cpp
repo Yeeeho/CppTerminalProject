@@ -1,12 +1,11 @@
-#include <iostream>
-#include <string>
+#include "pch.h"
 
-#include "Utils.h"
-#include "UI.h"
-#include "Scenes.h"
-#include "Entities.h"
-#include "Combat.h"
-#include "Map.h"
+#include "utils.h"
+#include "ui.h"
+#include "scenes.h"
+#include "entities.h"
+#include "combat.h"
+#include "map.h"
 #include "items.h"
 
 Scenario::Scenario()
@@ -21,25 +20,30 @@ Scenario::Scenario(Player *p)
 void Scenario::DebugScene()
 {
     std::cout << "debugging scene\n";
-
+    player->equipments["head"] = new Item("default");
+    
+    std::cout << player->equipments.size() << std::endl;
+    std::cout << player->equipments["head"]->name << std::endl;
 
     // player->inventory.push_back(new Item("iron_dagger"));
     // player->inventory.push_back(new Item("iron_dagger"));
     // UIManager(new InvUI(player)).Run();   
 
-    Combat combat = Combat(player);
-    Entities* slv = new Entities("slave");
-    combat.Loop(slv);
+    // Combat combat = Combat(player);
+    // Entities* rat = new Entities("rat");
+    // combat.Loop(rat);
 
-    // Map map = Map(30);
-    // map.RandomRooms();
-    // map.Progress();
+    Map map = Map(30);
+    map.RandomRooms();
+    map.Progress();
 
     std::cout << "debug scene ended\n";
 }
 
 void Scenario::YesOrNo(std::string &input)
 {
+    Utilities util;
+
     std::cout << "[1] 예\n";
     std::cout << "[2] 아니오\n";
     util.PrintLine("숫자를 입력해서 선택하십시오.\n\n");
@@ -48,6 +52,8 @@ void Scenario::YesOrNo(std::string &input)
 }
 
 void Scenario::Init() {
+
+    Utilities util;
 
     curScene = "intro0";
 
@@ -160,6 +166,8 @@ void Scenario::Init() {
 
 void Scenario::ReturnMain()
 {
+    Utilities util;
+
     util.PrintLine("메인 화면으로 돌아가시겠습니까?");
     util.NewLine(2);
 
@@ -175,6 +183,8 @@ void Scenario::ReturnMain()
 
 void Scenario::CutCommEnding()
 {
+    Utilities util;
+
     util.LoadingLine("",1);
     util.PrintLine("B1E900A2 터미널과의 통신이 끊어졌습니다.");
     util.LoadingLine("통신 가능한 단말기를 검색중", 2);
@@ -199,6 +209,8 @@ void Scenario::CutCommEnding()
 
 void Scenario::DeathEnding()
 {
+    Utilities util;
+
     util.PrintLine("상대 터미널이 통신을 중지했습니다.", 2);
     util.PrintLine("\033[31m엔딩 2: 객사", false, 50, 100);
     util.NewLine(3);
@@ -207,6 +219,8 @@ void Scenario::DeathEnding()
 
 void Scenario::Intro1()
 {
+    Utilities util;
+
     std::cout << "hi";
     util.TerminalColor("blue");
     std::string line = "이봐, " + player->name;

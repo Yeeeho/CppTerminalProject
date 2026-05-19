@@ -6,16 +6,14 @@
 class Entities;
 class EntityAI;
 
-static std::unordered_map<std::string, const EntityAI*> aiMap;
+extern std::unordered_map<std::string, EntityAI*> aiMap;
 
-class AIManager {
-
+class AIManager {    
     Entities* ent = nullptr;
 
     public:
-    AIManager() = default;
 
-    void LoadMap(); //ai_map.cpp 에 정의 존재.
+    AIManager() = default;
 };
 
 class EntityAI {
@@ -23,29 +21,35 @@ class EntityAI {
     public:
     Entities* ent = nullptr;
     
-    virtual void Act(Entities*);
+    EntityAI();
+
+    virtual void Act();
 };
 
 class DefaultAI : public EntityAI {
     public:
+    DefaultAI() = default;
 
-    void Act(Entities*) override;
+    void Act() override;
 };
 
 class SlaveAI : public EntityAI {
     public:
+    SlaveAI() = default;
 
-    void Act(Entities*) override;
+    void Act() override;
 };
 
 class SubterranAI : public EntityAI {
     public:
+    SubterranAI() = default;
 
-    void Act(Entities*) override;
+    void Act() override;
 };
 
 class RatAI : public EntityAI {
     public:
+    RatAI() = default;
 
-    void Act(Entities*) override;
+    void Act() override;
 };

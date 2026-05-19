@@ -1,8 +1,9 @@
 #include "effects.h"
+#include "entities.h"
 
 Defence::Defence(Entities *ent)
 {
-    name = "방어";
-    lastTurn = 2;
-    buffDef = ent->hp/10;
+    this->name = "방어";
+    this->lastTurn = 2;
+    this->buffDef = ent->hp/10;
 }

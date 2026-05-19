@@ -3,12 +3,11 @@
 #include <iostream>
 #include <string>
 
-#include "Utils.h"
-#include "Entities.h"
+class Entities;
+class Player;
 
 class Scenario {
     private:
-    Utilities util;
     Player* player;
     public:
 

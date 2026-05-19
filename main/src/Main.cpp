@@ -1,11 +1,8 @@
-#include <iostream>
-#include <string>
-#include <thread>
-#include <chrono>
+#include "pch.h"
 
-#include "System.h"
-#include "Scenes.h"
-#include "Entities.h"
+#include "system.h"
+#include "scenes.h"
+#include "entities.h"
 
 void DebugLoop() {
     Player* player = new Player();

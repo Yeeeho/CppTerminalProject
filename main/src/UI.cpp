@@ -1,8 +1,9 @@
-#include <iostream>
-#include <cctype>
+#include "pch.h"
 
-#include "UI.h"
-#include "Utils.h"
+#include "ui.h"
+#include "utils.h"
+#include "items.h"
+#include "entities.h"
 
 UI* UI::Show()
 {

@@ -1,0 +1,14 @@
+{
+    "type" : "event_pool",
+    "items" : {
+
+        "default" : [
+            "default"
+        ],
+
+        "underworld" : [
+            "item", "empty"
+        ]
+    }
+
+}

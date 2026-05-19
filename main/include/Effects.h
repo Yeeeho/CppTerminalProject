@@ -2,8 +2,6 @@
 
 #include <string>
 
-#include "Entities.h"
-
 class Entities;
 
 class Effects {

@@ -53,7 +53,7 @@
             "ai_type" : "rat",
 
             "hp" : 10,
-            "atk" : 10,
+            "atk" : 5,
             "spd" : 20,
             "exp" : 10
         }

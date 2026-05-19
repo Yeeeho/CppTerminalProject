@@ -1,11 +1,7 @@
-#include <iostream>
-#include <string>
-#include <vector>
-#include <thread>
-#include <chrono>
+#include "pch.h"
 
-#include "Utils.h"
-#include "Entities.h"
+#include "utils.h"
+#include "entities.h"
 
 void Utilities::Wait05() {
     std::this_thread::sleep_for(std::chrono::milliseconds(500));

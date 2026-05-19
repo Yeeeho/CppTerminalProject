@@ -1,8 +1,10 @@
 #pragma once
 
 #include <vector>
+#include "system.h"
 
-#include "Entities.h"
+class Entities;
+class Item;
 
 class UI; //전방 선언
 

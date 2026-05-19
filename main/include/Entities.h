@@ -1,11 +1,10 @@
 #pragma once
 
 #include <string>
+#include <unordered_map>
 #include <vector>
 
-#include "System.h"
-#include "Effects.h"
-#include "items.h"
+#include "system.h"
 
 class Effects;
 class Item;
@@ -42,7 +41,6 @@ class Entities : public GameObject {
     Entities(std::string name);
     Entities(const Entities& ent); //복사 생성자
 
-    virtual void Attack();
     virtual void TakeTurn();
     virtual void Dead(); 
 };
@@ -55,12 +53,11 @@ class Player : public Entities {
     std::vector<Item*> inventory;
     int invSize;
 
-    std::vector<Equipments*> wornGears;
+    std::unordered_map<std::string, Item*> equipments;
 
     Player();
     ~Player();
 
-    void Attack() override;
     void TakeTurn() override;
     void Dead() override;
     void ShowMenu();

@@ -1,18 +1,21 @@
 #pragma once
 
 #include <vector>
+#include <string>
 
-#include "Entities.h"
+class Entities;
+class Player;
 
 class Room {
     private:
 
     public:
 
+    Entities* enemy = nullptr;
     bool isEnemy = false;
     int enemyIdx = -1;
-    Entities* enemy = nullptr;
 
+    std::string eventName;
     bool isEvent = false;
     int eventIdx = -1;
 

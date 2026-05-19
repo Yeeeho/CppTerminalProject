@@ -1,8 +1,9 @@
-#include <iostream>
+#include "pch.h"
 
+#include "entities.h"
 #include "skills.h"
-#include "Utils.h"
-#include "Combat.h"
+#include "utils.h"
+#include "combat.h"
 
 void Skill::Do()
 {

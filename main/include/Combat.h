@@ -1,6 +1,7 @@
-#include "Entities.h"
+#pragma once
 
 class Entities;
+class Player;
 
 class Combat {
     private:

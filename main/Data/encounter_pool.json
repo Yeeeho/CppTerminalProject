@@ -1,13 +1,13 @@
 {
-    "type" : "enemy_pool",
+    "type" : "encounter_pool",
     "items" : {
         
         "default" : [
             "default"
         ],
         
-        "underground" : [
-            "slave", "subterran"
+        "underworld" : [
+            "slave", "subterran", "rat"
         ]
     }
 

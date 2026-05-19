@@ -1,11 +1,10 @@
-#include <iostream>
-#include <string>
-#include <random>
+#include "pch.h"
 
 #include "system.h"
 #include "entities.h"
 #include "effects.h"
-#include "combat.h"
+#include "entity_ai.h"
+#include "skills.h"
 #include "items.h"
 #include "utils.h"
 #include "ui.h"
@@ -69,19 +68,10 @@ Entities::Entities(const Entities &ent) // 복사 생성자
 
 }
 
-void Entities::Attack()
-{
-    Utilities util;
-    Combat comb;
-
-    std::string name = util.WrapColor(this->name, this->nameColor);
-    std::cout << name << " 이(가) 공격했다." << std::endl;
-
-    comb.TakeDamage(this->target, this->atk);
-}
-
 void Entities::TakeTurn() {
-    this->Attack();
+    EntityAI* ai = aiMap[aiType];
+    ai->ent = this;
+    ai->Act();
 }
 
 void Entities::Dead()
@@ -124,18 +114,6 @@ void Entities::Dead()
     delete this;
 }
 
-void Player::Attack()
-{
-    Utilities util;
-    Combat combat;
-
-    std::string playerName = util.WrapColor(this->name, "green");
-    std::string line = playerName + "이 공격했다.";
-    util.PrintLine(line, 2);
-
-    combat.TakeDamage(this->target, this->atk);
-}
-
 Player::Player()
 {
     GameSystem::player = this;
@@ -150,6 +128,15 @@ Player::Player()
 
     isPlayer = true;
     
+    equipments["weapon"] = NULL;
+
+    equipments["head"] = NULL;
+    equipments["body"] = NULL;
+    equipments["leg"] = NULL;
+    equipments["foot"] = NULL;
+    equipments["hand"] = NULL;
+    equipments["back"] = NULL;
+
     invSize = 6;
 }
 
@@ -175,7 +162,6 @@ void Player::ShowMenu()
 {
     PlayerUI pui = PlayerUI(this);
     Utilities util;
-    Combat combat;
 
     util.TerminalColor("yellow");
     util.PrintLine("행동을 선택하십시오.");
@@ -193,7 +179,7 @@ void Player::ShowMenu()
 
         //공격
         if (input == "1") {
-            this->Attack();
+            BasicAttack(this).Do();
             break;
         }
         //관찰

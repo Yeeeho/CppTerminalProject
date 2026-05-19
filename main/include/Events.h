@@ -1,13 +1,23 @@
 #pragma once
 
 #include <string>
+#include <unordered_map>
 
-class DataPool;
+class Events;
+
+extern std::unordered_map<std::string, Events*> eventMap;
 
 class Events {
-    private:
     public:
-    
-    void ItemEvent();
-    void EmptyEvent();
+    virtual void Run();
+};
+
+class ItemsEvent : public Events {
+    public:
+    void Run() override;
+};
+
+class EmptyEvent : public Events {
+    public:
+    void Run() override;
 };

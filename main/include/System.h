@@ -5,6 +5,7 @@
 using json = nlohmann::json;
 
 extern json itemPool;
+extern json eventPool;
 extern json entityPool;
 extern json encounterPool;
 
@@ -20,6 +21,8 @@ class GameSystem {
 
     void Load();
     void LoadJsonFile(json& j, std::string path);
+    void LoadAIMap();
+    void LoadEventMap();
 };
 
 class GameObject : public GameSystem {

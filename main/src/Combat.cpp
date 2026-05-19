@@ -1,8 +1,11 @@
-#include <vector>
+#include "pch.h"
 
-#include "Combat.h"
-#include "Scenes.h"
-#include "Utils.h"
+#include "items.h"
+#include "entities.h"
+#include "effects.h"
+#include "combat.h"
+#include "scenes.h"
+#include "utils.h"
 
 Combat::Combat(Player *p)
 {
@@ -79,7 +82,7 @@ void Combat::BattleUI(Entities* entities[])
 
     std::string atk0 = std::to_string(playerUI->atk);
     std::string atk1 = std::to_string(enemyUI->atk);
-    std::cout << "공격력:" + atk0 + "\r\033[20C" + "공격력" + atk1 + "\n";
+    std::cout << "공격력: " + atk0 + "\r\033[20C" + "공격력: " + atk1 + "\n";
 
     std::string spd0 = std::to_string(playerUI->spd);
     std::string spd1 = std::to_string(enemyUI->spd);

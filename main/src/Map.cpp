@@ -1,15 +1,14 @@
-#include <iostream>
-#include <vector>
-#include <random>
+#include "pch.h"
 
 #include "json.hpp"
-#include "System.h"
-#include "Combat.h"
-#include "Map.h"
-#include "Entities.h"
-#include "Events.h"
+#include "system.h"
+#include "utils.h"
+#include "combat.h"
+#include "map.h"
+#include "entities.h"
+#include "events.h"
 
-static bool isDebug = true;
+static bool isDebug = false;
 
 Map::Map()
 {
@@ -39,12 +38,13 @@ void Map::RandomRooms()
 {
     Events ev;
 
-    json currentPool = encounterPool["items"]["underground"]; //여기 하드코딩해놓음
+    json currentEncPool = encounterPool["items"]["underworld"]; 
+    json currentEventPool = eventPool["items"]["underworld"];
 
     static std::default_random_engine dre;
-    static std::bernoulli_distribution EnemyProb(0.7);
-    static std::uniform_int_distribution<int> EnemyRand(0, currentPool.size()-1);
-    static std::uniform_int_distribution<int> EventRand(0, 1);
+    static std::bernoulli_distribution EnemyProb(0.0);
+    static std::uniform_int_distribution<int> EnemyRand(0, currentEncPool.size()-1);
+    static std::uniform_int_distribution<int> EventRand(0, currentEventPool.size()-1);
 
     for (auto room : this->rooms) {
 
@@ -57,17 +57,17 @@ void Map::RandomRooms()
 
         if (room->isEnemy) {
             room->enemyIdx = EnemyRand(dre);
-            room->enemy = new Entities((currentPool[room->enemyIdx]));
+            room->enemy = new Entities((currentEncPool[room->enemyIdx]));
         }
         if (room->isEvent) {
-            room->eventIdx = EventRand(dre);
+            room->eventName = currentEventPool[EventRand(dre)];
         }
     }
 }
 
 void Map::Progress()
 {
-    Events ev;
+    Utilities util;
 
     for (auto room : this->rooms) {
         if(room->isEnemy) {
@@ -79,18 +79,15 @@ void Map::Progress()
         }
 
         else if(room->isEvent) {
-            if (isDebug) {
-                std::string eventIdx = std::to_string(room->eventIdx);
-                std::cout << "event idx" + eventIdx + "\n";
-            }
-            std::cout << "event feature is not updated" << std::endl;
+            if (isDebug) std::cout << room->eventName << std::endl;
+                
+            Events* ev = eventMap[room->eventName];
+            ev->Run();            
         }
-        else {
-            std::cout << "if you see this there is something wrong\n";
-        }
+
+        util.PrintLine("당신은 다음 방으로 나아갑니다..");        
     }
 }
-
 Room::Room()
 {
 }
