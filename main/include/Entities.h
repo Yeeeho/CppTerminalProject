@@ -5,7 +5,7 @@
 
 #include "System.h"
 #include "Effects.h"
-#include "item.h"
+#include "items.h"
 
 class Effects;
 class Item;

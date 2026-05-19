@@ -1,4 +1,4 @@
-#include "Effects.h"
+#include "effects.h"
 
 Defence::Defence(Entities *ent)
 {

@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "skill.h"
+#include "skills.h"
 #include "Utils.h"
 #include "Combat.h"
 

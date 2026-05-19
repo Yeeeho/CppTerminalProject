@@ -1,35 +1,51 @@
 #pragma once
 
-#include "Entities.h"
+#include <string>
+#include <unordered_map>
+
+class Entities;
+class EntityAI;
+
+static std::unordered_map<std::string, const EntityAI*> aiMap;
+
+class AIManager {
+
+    Entities* ent = nullptr;
+
+    public:
+    AIManager() = default;
+
+    void LoadMap(); //ai_map.cpp 에 정의 존재.
+};
 
 class EntityAI {
 
     public:
     Entities* ent = nullptr;
     
-    EntityAI* WhatAI();
-    virtual void Act();
+    virtual void Act(Entities*);
+};
 
-    EntityAI(Entities* ent);
+class DefaultAI : public EntityAI {
+    public:
+
+    void Act(Entities*) override;
 };
 
 class SlaveAI : public EntityAI {
     public:
-    SlaveAI(Entities* ent) : EntityAI(ent) {};
 
-    void Act() override;
+    void Act(Entities*) override;
 };
 
 class SubterranAI : public EntityAI {
     public:
-    SubterranAI(Entities* ent) : EntityAI(ent) {};
 
-    void Act() override;
+    void Act(Entities*) override;
 };
 
 class RatAI : public EntityAI {
     public:
-    RatAI(Entities* ent) : EntityAI(ent) {};
 
-    void Act() override;
+    void Act(Entities*) override;
 };

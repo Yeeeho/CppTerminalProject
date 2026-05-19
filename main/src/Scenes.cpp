@@ -7,7 +7,7 @@
 #include "Entities.h"
 #include "Combat.h"
 #include "Map.h"
-#include "item.h"
+#include "items.h"
 
 Scenario::Scenario()
 {

@@ -1,30 +1,30 @@
 #include <iostream>
 
 #include "entity_ai.h"
-#include "skill.h"
+#include "skills.h"
 
-
-EntityAI::EntityAI(Entities* ent)
+void EntityAI::Act(Entities* ent)
 {
-    this->ent = ent;
+    std::cout << "this object is abstract" << std::endl;
 }
 
-void EntityAI::Act()
+void DefaultAI::Act(Entities *)
 {
-    std::cout << "virtual function for entity ai" << std::endl;
+    std::cout << "this is default ai" << std::endl;
 }
 
-void SlaveAI::Act()
+void SlaveAI::Act(Entities* ent)
 {
-    BasicAttack(this->ent).Do();
+    BasicAttack(ent).Do();
 }
 
-void SubterranAI::Act()
+void SubterranAI::Act(Entities* ent)
 {
-    BasicAttack(this->ent).Do();
+    BasicAttack(ent).Do();
 }
 
-void RatAI::Act()
+void RatAI::Act(Entities* ent)
 {
-    BasicAttack(this->ent).Do();
+    BasicAttack(ent).Do();
 }
+

@@ -2,13 +2,13 @@
 #include <string>
 #include <random>
 
-#include "System.h"
-#include "Entities.h"
-#include "Effects.h"
-#include "Combat.h"
-#include "item.h"
-#include "Utils.h"
-#include "UI.h"
+#include "system.h"
+#include "entities.h"
+#include "effects.h"
+#include "combat.h"
+#include "items.h"
+#include "utils.h"
+#include "ui.h"
 
 Entities::Entities(std::string name)
 {
