@@ -6,3 +6,5 @@ Separated header and source files
 Added skill class
 Added entity ai class
 Changed name of files to fit convention
+
+##5/19
